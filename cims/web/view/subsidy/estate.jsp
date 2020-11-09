@@ -25,7 +25,7 @@
                       物业补贴
                   </header>
 				  <form class="form-inline" role="form" id="subsidy">
-					  <input hidden id="thisPage" value="${requestScope.params.thisPage}">
+					  <input hidden id="thisPage" name="thisPage" value="${requestScope.params.thisPage}">
 					  <div class="row">
 						  <div class="col-lg-12">
 							  <section class="panel">
@@ -95,7 +95,7 @@
 									  <button class="btn btn-primary" type="button" id="first">首页</button>
 									  <button class="btn btn-primary" type="button" id="prev">上页</button>
 								  </c:if>
-								  <c:if test="${params.thisPage != param.maxPage}">
+								  <c:if test="${params.thisPage != params.maxPage}">
 									  <button class="btn btn-primary" type="button" id="next">下页</button>
 									  <button class="btn btn-primary" type="button" id="last">末页</button>
 								  </c:if>
@@ -137,8 +137,8 @@
 				}
 
 				$('#thisPage').val(thisPage);
-				$('#subsidy').submit();
 
+				$('#subsidy').submit();
 			});
 
 

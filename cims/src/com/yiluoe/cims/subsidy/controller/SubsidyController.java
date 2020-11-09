@@ -3,6 +3,7 @@ package com.yiluoe.cims.subsidy.controller;
 import com.yiluoe.cims.subsidy.entity.Subsidy;
 import com.yiluoe.cims.subsidy.factory.SubsidyFactory;
 import com.yiluoe.cims.subsidy.service.SubsidyService;
+import com.yiluoe.cims.util.validate.Validator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,9 +36,15 @@ public class SubsidyController extends HttpServlet {
 
         //1.分页查询
         if(true){
-            System.out.println( req.getParameter("thisPage") );
 
             int thisPage = 1;
+            String thisPageParams = req.getParameter("thisPage");
+            if(Validator.isNotEmpty(thisPageParams)){
+                if(Validator.isInteger(thisPageParams)){
+                    thisPage = Integer.parseInt(thisPageParams);
+                }
+            }
+
             int pageSize = 10;
             long count = subsidyService.queryByCount(null);
             int maxPage = (int)Math.ceil(count*1.0 / pageSize);
