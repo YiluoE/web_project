@@ -207,7 +207,7 @@
                       </a>
                       <ul class="sub">
                           <li><a class="" href="view/subsidy/heating.html" target="mainFrame">物业补贴</a></li>
-                          <li><a class="" href="view/subsidy/estate.html" target="mainFrame">供暖补贴</a></li>
+                          <li><a class="" href="${pageContext.request.contextPath}/subsidy.do<%--view/subsidy/estate.html--%>" target="mainFrame">供暖补贴</a></li>
                       </ul>
                   </li>
               </ul>
@@ -242,7 +242,7 @@
 
   <script>
 
-      $(document).ready(function () {
+    $(document).ready(function () {
         $("#owl-demo").owlCarousel({
             navigation: true,
             slideSpeed: 300,
@@ -250,6 +250,7 @@
             singleItem: true
         });
     });
+
     //custom select box
     $(function () {
         $('select.styled').customSelect();

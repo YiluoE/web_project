@@ -15,6 +15,7 @@
     <!--需要注意放置位置-->
     <typeAliases>
         <typeAlias type="com.yiluoe.cims.person.entity.Person" alias="person"/>
+        <typeAlias type="com.yiluoe.cims.subsidy.entity.Subsidy" alias="subsidy"/>
     </typeAliases>
 
     <!-- 对事务的管理和连接池的配置 -->
@@ -41,8 +42,9 @@
 
     <!--装载mybatis映射文件 SQL文件-->
     <mappers>
-        <mapper resource="com/yiluoe/cims/test/repository/TestMapper.xml"/>
+        <!--<mapper resource="com/yiluoe/cims/test/repository/TestMapper.xml"/>-->
         <mapper resource="com/yiluoe/cims/person/repository/PersonMapper.xml"/>
+        <mapper resource="com/yiluoe/cims/subsidy/repository/SubsidyMapper.xml"/>
     </mappers>
 
 </configuration>

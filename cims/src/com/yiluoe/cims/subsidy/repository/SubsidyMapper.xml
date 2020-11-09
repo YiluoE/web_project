@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="subsidy">
+
+    <select id="queryAll" resultType="subsidy">
+        select h.id,h.personid,h.date,p.name,p.card,p.grade,h.money from cims_heating h inner join cims_person p on h.personid=p.id
+    </select>
+
+    <select id="queryByCount" resultType="Long">
+        select count(1) from cims_heating
+    </select>
+
+    <select id="queryByPage" resultType="subsidy" parameterType="Map">
+        select h.id,h.personid,h.date,p.name,p.card,p.grade,h.money
+        from cims_heating h inner join cims_person p on h.personid=p.id
+        <where>
+        </where>
+        limit #{offset},#{pageSize}
+   </select>
+
+</mapper>
