@@ -21,7 +21,7 @@
              人员添加
           </header>
           <div class="panel-body">
-              <form class="form-horizontal tasi-form" action="${pageContext.request.contextPath}/person.do" method="post">
+              <form class="form-horizontal tasi-form" id="createForm" action="${pageContext.request.contextPath}/person.do" method="post">
                   <input type="hidden" name="formType" value="create">
                   <div class="form-group">
                       <label class="col-sm-2 control-label">姓名</label>
@@ -65,7 +65,7 @@
                   <div class="form-group">
                       <label class="col-sm-2 control-label">起薪日期</label>
                       <div class="col-sm-10">
-                          <input class="form-control" type="text" id="start" name="start" placeholder="点击这里选择日期..." id="date" readonly>
+                          <input class="form-control" type="text" id="start" name="start" placeholder="点击这里选择日期..." readonly>
                       </div>
                   </div>
                   <div class="form-group">
@@ -77,12 +77,13 @@
                           <label class="checkbox-inline">
                               <input type="checkbox" value="1" id="property" name="property"> 物业
                           </label>
+                          <span class="help-block" id="msg" style="color: #FFFFFF">至少选择一条补贴项！</span>
                       </div>
                   </div>
                   <div class="form-group">
                       <label class="col-sm-2 control-label">更改原因</label>
                       <div class="col-sm-10">
-                          <input type="text"  class="form-control" placeholder="请输入更改原因" name="reason">
+                          <input type="text"  class="form-control" placeholder="请输入更改原因" name="reason" id="reason">
                       </div>
                   </div>
                   <div class="form-group">
@@ -103,6 +104,7 @@
     <script type="text/javascript">
       $(document).ready(function() 
       {
+
         $('#addButton').on('click',function () {
 
             let ids_f = [];
@@ -132,11 +134,11 @@
             else
                 ids_t[ids_t.length] = obj.attr('id');
 
-            /*obj = $('#start');
+            obj = $('#start');
             if(obj.val().match(/(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)/) == null )
                 ids_f[ids_f.length] = obj.attr('id');
             else
-                ids_t[ids_t.length] = obj.attr('id');*/
+                ids_t[ids_t.length] = obj.attr('id');
 
             /*补贴的处理*/
             if(true){
@@ -149,19 +151,19 @@
                 if ( $('#property').prop(('checked')) == true )
                     num++;
 
-                if(num >= 1){
-                }
-                else {
+                if(num < 1){
+                    $('#msg').css({"color":"#ff0000"});
                 }
 
                 $('#property').css({"border-color":"#ff0000"});
             }
 
-
-            /*if(obj.val().match(/[1-8]/) == null )
+            obj = $('#reason');
+            if( obj.val().match(/^[\u4e00-\u9fa5]{1,50}$/) == null )
                 ids_f[ids_f.length] = obj.attr('id');
             else
-                ids_t[ids_t.length] = obj.attr('id');*/
+                ids_t[ids_t.length] = obj.attr('id');
+
 
             ids_f.forEach( (v)=>{
                 $('#'+v).css({"border-color":"#ff0000"});
@@ -176,10 +178,13 @@
 
                 $('#'+id).focus();
             }
+            else{
+                $('#createForm').submit();
+            }
 
         });
 
-        $('#date').datepicker({
+        $('#start').datepicker({
                 format: 'yyyy-mm-dd'
         });
       });
