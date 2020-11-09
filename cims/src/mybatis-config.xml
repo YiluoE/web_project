@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!-- 引入配置的资源文件 -->
+    <properties resource="jdbc.properties"/>
+
+    <!--可选变编程配置-->
+    <settings>
+        <setting value="STDOUT_LOGGING" name="logImpl"/>
+    </settings>
+
+    <!--为自定义对象提供别名-->
+    <!--需要注意放置位置-->
+    <typeAliases>
+        <typeAlias type="com.yiluoe.cims.person.entity.Person" alias="person"/>
+    </typeAliases>
+
+    <!-- 对事务的管理和连接池的配置 -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/> <!--事务管理器-->
+            <dataSource type="POOLED"> <!--链接池-->
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+        <environment id="work">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--装载mybatis映射文件 SQL文件-->
+    <mappers>
+        <mapper resource="com/yiluoe/cims/test/repository/TestMapper.xml"/>
+        <mapper resource="com/yiluoe/cims/person/repository/PersonMapper.xml"/>
+    </mappers>
+
+</configuration>

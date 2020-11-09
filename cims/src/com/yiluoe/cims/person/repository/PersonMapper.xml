@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="person">
+
+    <insert id="insert" parameterType="Person">
+        insert into cims_person(name,card,state,grade,start,heating,property,reason)
+        values(#{name},#{card},#{state},#{grade},#{start},#{heating},#{property},#{reason})
+    </insert>
+
+    <select id="queryAll" resultType="Person">
+        select id,name,card,state,grade,start,heating,property,reason from cims_person
+    </select>
+
+    <select id="queryByPage" parameterType="Map" resultType="Person">
+        select id,name,card,state,grade,start,heating,property,reason from cims_person
+        <where>
+            <if test="null != name and '' != name">
+                name like concat('%',#{name},'%')
+            </if>
+            <if test="null != card and '' != card">
+                and card=#{card}
+            </if>
+            <if test="null != state and (state == 1 or state == 2)">
+                and state=#{state}
+            </if>
+            <if test="null != heating">
+                and heating=#{heating}
+            </if>
+            <if test="null != property">
+                and property=#{property}
+            </if>
+            <if test="null != ssd and null != sed">
+                and start between #{ssd} and #{sed}
+            </if>
+        </where>
+            limit #{offset},#{pageSize}
+    </select>
+
+    <select id="queryByCount" parameterType="Map" resultType="Long">
+        select count(1) from cims_person
+            <where>
+                <if test="null != name and '' != name">
+                    name like concat('%',#{name},'%')
+                </if>
+                <if test="null != card and '' != card">
+                    and card=#{card}
+                </if>
+                <if test="null != state and (state == 1 or state == 2)">
+                    and state=#{state}
+                </if>
+                <if test="null != heating">
+                    and heating=#{heating}
+                </if>
+                <if test="null != property">
+                    and property=#{property}
+                </if>
+                <if test="null != ssd and null != sed">
+                    and start between #{ssd} and #{sed}
+                </if>
+            </where>
+    </select>
+    
+    <select id="queryById" parameterType="int" resultType="Person">
+        select id,name,card,state,grade,start,heating,property,reason from cims_person
+        where id=#{abaabaaba}
+    </select>
+
+    <select id="update" parameterType="Person">
+        update cims_person set name=#{name},card=#{card},state=#{state},grade=#{grade},
+        start=#{start},heating=#{heating},property=#{property},reason=#{reason}
+        where id=#{id}
+    </select>
+
+    <select id="delete" parameterType="int">
+        delete from cims_person where id=#{id}
+    </select>
+
+    <!--不能再select表里写注释-->
+    <!--collection="array|list|map"-->
+    <!--separator执行n-1次-->
+    <select id="batch" parameterType="int">
+        delete from cims_person where id in
+            <foreach collection="array" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </select>
+
+</mapper>

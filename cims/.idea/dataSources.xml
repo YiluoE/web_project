@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="myschemas" uuid="6244f8a9-be68-41e6-b715-300a169ab8fa">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/myschemas?characterEncoding=utf8&amp;userSSL=false&amp;serverTimezone=Asia/Shanghai&amp;rewriteBatchedStatements=true</jdbc-url>
+    </data-source>
+  </component>
+</project>
