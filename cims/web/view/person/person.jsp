@@ -41,10 +41,18 @@
 									  </div>
 									  <div class="form-group">
 										  <label class="">状态</label>
-										  <select class="form-control" name="state">
+										  <select class="form-control" name="state" id="state">
 											<option value="0">请选择</option>
-											<option value="1" ${requestScope.params.state == 1?"selected":""}>离休</option>
-											<option value="2" ${requestScope.params.state == 2?"selected":""}>退休</option>
+											  <c:forEach items="${applicationScope.state}" var="state">
+												  <option value="${state.key}" ${requestScope.params.state == state.key?"selected":""}>
+														  ${state.value}
+												  </option>
+											  </c:forEach>
+
+
+											<%--不如直接用jQuery--%>
+											<%--<option value="1" ${requestScope.params.state == 1?"selected":""}>离休</option>
+											<option value="2" ${requestScope.params.state == 2?"selected":""}>退休</option>--%>
 										  </select>
 										  </div>
 										  <div class="form-group">
@@ -94,14 +102,26 @@
 									  <td>${entity.name}</td>
 									  <td>${entity.card}</td>
 									  <td>
-										  <c:if test="${entity.state == 1}">
-											  <span class="label label-success label-mini">离休</span>
-										  </c:if>
-										  <c:if test="${entity.state == 2}">
-											  <span class="label label-danger label-mini">退休</span>
-										  </c:if>
+										  <c:forEach items="${applicationScope.state}" var="state">
+											  <c:if test="${state.key == entity.state}"> <%--默认requestScope--%>
+												  <c:if test="${entity.state == 1}">
+													  <span class="label label-success label-mini">离休</span>
+												  </c:if>
+												  <c:if test="${entity.state == 2}">
+													  <span class="label label-danger label-mini">退休</span>
+												  </c:if>
+											  </c:if>
+										  </c:forEach>
+
 									  </td>
-									  <td>${entity.grade}</td>
+									  <td>
+										  <c:forEach items="${applicationScope.grade}" var="grade">
+											  <c:if test="${entity.grade == grade.key}"> <%--为什么用了个el比较不可以--%>
+												  ${grade.value}
+											  </c:if>
+										  </c:forEach>
+
+									  </td>
 									  <td>
 										  <f:formatDate value="${entity.start}" pattern="yyyy-MM-dd"/>
 									  </td>
@@ -144,6 +164,8 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 
     <script>
+		/*$('#state').val(${requestScope.params.state});*/
+
 		$(document).ready(function() 
 		{
 

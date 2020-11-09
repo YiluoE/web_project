@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="zh">
   <head>
@@ -44,8 +45,11 @@
                       <div class="col-sm-10">
                           <select class="form-control" name="state">
                             <option value="0">请选择</option>
-                            <option value="1" ${entity.state == 1?"selected":""}>离休</option>
-                            <option value="2" ${requestScope.entity.state == 2?"selected":""}>退休</option>
+                            <c:forEach items="${applicationScope.state}" var="state">
+                                <option value="${state.key}" ${entity.state == state.key?"selected":""}>
+                                    ${state.value}
+                                </option>
+                            </c:forEach>
                           </select>
                       </div>
                   </div>
@@ -54,14 +58,11 @@
                       <div class="col-sm-10">
                           <select class="form-control" name="grade"> <%--啊~ 这个回显可以...用jQuery做回显--%>
                             <option value="0">请选择</option>
-                            <option value="1">部级正职</option>
-                            <option value="2">部级副职</option>
-                            <option value="3">司级正职</option>
-                            <option value="4">司级副职</option>
-                            <option value="5">处级正职</option>
-                            <option value="6">处级副职</option>
-                            <option value="7">科级正职</option>
-                            <option value="8">科级副职</option>
+                              <c:forEach items="${applicationScope.grade}" var="grade">
+                                  <option value="${grade.key}">
+                                          ${grade.value}
+                                  </option>
+                              </c:forEach>
                           </select>
                       </div>
                   </div>

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="zh">
   <head>
@@ -51,14 +52,11 @@
                       <div class="col-sm-10">
                           <select class="form-control" name="grade" id="grade">
                             <option value="0">请选择</option>
-                            <option value="1">部级正职</option>
-                            <option value="2">部级副职</option>
-                            <option value="3">司级正职</option>
-                            <option value="4">司级副职</option>
-                            <option value="5">处级正职</option>
-                            <option value="6">处级副职</option>
-                            <option value="7">科级正职</option>
-                            <option value="8">科级副职</option>
+                            <c:forEach items="${applicationScope.grade}" var="grade">
+                                <option value="${grade.key}">
+                                        ${grade.value}
+                                </option>
+                            </c:forEach>
                           </select>
                       </div>
                   </div>
