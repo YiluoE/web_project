@@ -54,7 +54,7 @@ public class SubsidyRepositoryImpl implements SubsidyRepository {
     @Override
     public long queryByCount(Map<String, Object> params) {
         SqlSession sqlSession = MybatisUtils.getSqlSession();
-        long count = sqlSession.selectOne("subsidy.queryByCount");
+        long count = sqlSession.selectOne("subsidy.queryByCount",params);
         sqlSession.close();
         return count;
     }

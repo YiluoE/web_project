@@ -49,6 +49,6 @@ public class SubsidyServiceImpl implements SubsidyService {
 
     @Override
     public long queryByCount(Map<String, Object> params) {
-        return subsidyRepository.queryByCount(null);
+        return subsidyRepository.queryByCount(params);
     }
 }

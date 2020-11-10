@@ -4,6 +4,7 @@ import com.yiluoe.cims.subsidy.entity.Subsidy;
 import com.yiluoe.cims.subsidy.factory.SubsidyFactory;
 import com.yiluoe.cims.subsidy.service.SubsidyService;
 import com.yiluoe.cims.util.validate.Validator;
+import jdk.swing.interop.SwingInterOpUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +38,11 @@ public class SubsidyController extends HttpServlet {
 
         Map<String,Object> params = new HashMap<>();
 
-        //1.分页查询
         if(true){
 
+            //.页数处理
             int thisPage = 1;
+            int pageSize = 10;
             String thisPageParams = req.getParameter("thisPage");
             if(Validator.isNotEmpty(thisPageParams)){
                 if(Validator.isInteger(thisPageParams)){
@@ -45,24 +50,42 @@ public class SubsidyController extends HttpServlet {
                 }
             }
 
-            int pageSize = 10;
-            long count = subsidyService.queryByCount(null);
+            //.收集类型参数 1:供暖补贴 2:物业补贴
+            String type = req.getParameter("type");
+            if(Validator.isNotEmpty(type) && Validator.isInteger(type)){
+                params.put("type",Integer.parseInt(type));
+            }
+
+            //.收集查询参数
+            System.out.println("-----------------------------------------------------------");
+
+            String name = req.getParameter("name");
+            params.put("name",name);
+
+            String card = req.getParameter("card");
+            params.put("card",card);
+
+            System.out.println("-----------------------------------------------------------");
+
+            //.查询符合条件的总条数
+            long count = subsidyService.queryByCount(params);
             int maxPage = (int)Math.ceil(count*1.0 / pageSize);
 
             int offset = (thisPage-1)*10;
-
-            //1.1.收集查询参数
+            //.收集分页参数
             params.put("offset",offset);
             params.put("pageSize",pageSize);
-            //1.2.收集前端参数
+            //.为前端收集参数
             params.put("thisPage",thisPage);
             params.put("maxPage",maxPage);
             params.put("count",count);
         }
 
+        //.查询符合条件的所有数据且分页
+
         req.setAttribute("subsidyList",subsidyService.queryByPage(params));
         req.setAttribute("params",params);
 
-        req.getRequestDispatcher("view/subsidy/estate.jsp").forward(req,resp);
+        req.getRequestDispatcher("view/subsidy/subsidy.jsp").forward(req,resp);
     }
 }

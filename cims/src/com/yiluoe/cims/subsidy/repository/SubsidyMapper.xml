@@ -2,19 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="subsidy">
+    
+    <resultMap id="subsidyMap" type="subsidy">
+        <id property="id" column="subsidyID"/> <!-- column="id" 查询结果中寻找字段 -->
+        <result property="month" column="month"/>
+        <result property="money" column="money"/>
+        <result property="type" column="type"/>
+        <association property="person" javaType="person"> <!--property="person"父级属性--> <!--javaType="person"别名-->
+            <id property="id" column="personID"/>
+            <result property="name" column="name"/>
+            <result property="card" column="card"/>
+            <result property="grade" column="grade"/>
+        </association>
+    </resultMap>
 
-    <select id="queryAll" resultType="subsidy">
-        select h.id,h.personid,h.date,p.name,p.card,p.grade,h.money from cims_heating h inner join cims_person p on h.personid=p.id
-    </select>
-
-    <select id="queryByCount" resultType="Long">
-        select count(1) from cims_heating
-    </select>
-
-    <select id="queryByPage" resultType="subsidy" parameterType="Map">
-        select h.id,h.personid,h.date,p.name,p.card,p.grade,h.money
-        from cims_heating h inner join cims_person p on h.personid=p.id
+    <select id="queryAll" resultMap="subsidyMap" parameterType="Map">
+        select s.id as subsidyID,s.month,s.money,s.type,p.id as personID,p.name,p.card,p.grade
+        from cims_subsidy s left join cims_person p on s.person_id = p.id
         <where>
+            type=#{type}
+        </where>
+    </select>
+
+    <select id="queryByCount" resultType="Long" parameterType="Map">
+        select count(1)
+        from cims_subsidy s left join cims_person p on s.person_id = p.id
+        <where>
+            type=#{type}
+        </where>
+    </select>
+
+    <select id="queryByPage" resultMap="subsidyMap" parameterType="Map">
+        select s.id as subsidyID,s.month,s.money,s.type,p.id as personID,p.name,p.card,p.grade
+        from cims_subsidy s left join cims_person p on s.person_id = p.id
+        <where>
+            type=#{type}
         </where>
         limit #{offset},#{pageSize}
    </select>

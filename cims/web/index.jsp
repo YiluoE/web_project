@@ -19,7 +19,7 @@
     <style>
         iframe {
             display: block; /* iframes are inline by default */
-            background: #000;
+            background: white;
             border: none; /* Reset default border */
             height: 100vh; /* Viewport-relative units */
             width: 100%;
@@ -206,8 +206,8 @@
                           <span class="arrow"></span>
                       </a>
                       <ul class="sub">
-                          <li><a class="" href="view/subsidy/heating.html" target="mainFrame">物业补贴</a></li>
-                          <li><a class="" href="${pageContext.request.contextPath}/subsidy.do<%--view/subsidy/estate.html--%>" target="mainFrame">供暖补贴</a></li>
+                          <li><a class="" href="${pageContext.request.contextPath}/subsidy.do?type=1" target="mainFrame">供暖补贴</a></li>
+                          <li><a class="" href="${pageContext.request.contextPath}/subsidy.do?type=2" target="mainFrame">物业补贴</a></li>
                       </ul>
                   </li>
               </ul>

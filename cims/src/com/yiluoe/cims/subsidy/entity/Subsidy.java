@@ -1,35 +1,46 @@
 package com.yiluoe.cims.subsidy.entity;
 
+import com.yiluoe.cims.person.entity.Person;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * @program: cims
- * @description 数据库对象实体
+ * @description 补贴管理实体类
  * @user: 本以罗伊斯
  * @create: 2020/11/5 17:37
  **/
 public class Subsidy {
 
+    //主键s
     private int id;
-    private int personid;
-    private Date date;
-    private String name;
-    private String card;
-    private int grade;
+    //补贴 月份
+    private Date month;
+    //补贴 金额
     private BigDecimal money;
+    //类型 1:供暖 2:物业
+    private int type;
+
+    private Person person;
 
     @Override
     public String toString() {
         return "Subsidy{" +
                 "id=" + id +
-                ", personid=" + personid +
-                ", date=" + date +
-                ", name='" + name + '\'' +
-                ", card='" + card + '\'' +
-                ", grade=" + grade +
+                ", month=" + month +
                 ", money=" + money +
+                ", type=" + type +
+                ", person=" + person +
                 '}';
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public int getId() {
@@ -40,44 +51,12 @@ public class Subsidy {
         this.id = id;
     }
 
-    public int getPersonid() {
-        return personid;
+    public Date getMonth() {
+        return month;
     }
 
-    public void setPersonid(int personid) {
-        this.personid = personid;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCard() {
-        return card;
-    }
-
-    public void setCard(String card) {
-        this.card = card;
-    }
-
-    public int getGrade() {
-        return grade;
-    }
-
-    public void setGrade(int grade) {
-        this.grade = grade;
+    public void setMonth(Date month) {
+        this.month = month;
     }
 
     public BigDecimal getMoney() {
@@ -86,5 +65,13 @@ public class Subsidy {
 
     public void setMoney(BigDecimal money) {
         this.money = money;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

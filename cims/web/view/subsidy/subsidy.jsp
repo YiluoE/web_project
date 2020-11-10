@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="javakc-zhg">
  	<link rel="shortcut icon" href="img/favicon.html">
-    <title>物业补贴管理</title>
+    <title>${requestScope.params.type == 1?"供暖":"物业"}管理</title>
     <link href="${pageContext.servletContext.contextPath}/static/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.servletContext.contextPath}/static/css/bootstrap-reset.css" rel="stylesheet">
     <link href="${pageContext.servletContext.contextPath}/static/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
@@ -22,7 +22,7 @@
           <div class="col-lg-12">
               <section class="panel">
                   <header class="panel-heading">
-                      物业补贴
+					  ${requestScope.params.type == 1?"供暖":"物业"}补贴
                   </header>
 				  <form class="form-inline" role="form" id="subsidy">
 					  <input hidden id="thisPage" name="thisPage" value="${requestScope.params.thisPage}">
@@ -32,15 +32,15 @@
 								  <div class="panel-body">
 										  <div class="form-group">
 											  <label class="">姓名</label>
-											  <input type="text" class="form-control" placeholder="输入姓名">
+											  <input type="text" class="form-control" name="name" placeholder="输入姓名">
 										  </div>
 										  <div class="form-group">
 											  <label class="">身份证号</label>
-											  <input type="text" class="form-control" placeholder="请输入身份证号">
+											  <input type="text" name="card" class="form-control" placeholder="请输入身份证号">
 										  </div>
 										  <div class="form-group">
 											  <label class="">月份</label>
-											  <input type="text" id="sdate" class="form-control" placeholder="请输入开始日期" readonly>
+											  <input type="text" id="sdate" name="sdate" class="form-control" placeholder="请输入开始日期" readonly>
 										  </div>
 										  <button type="submit" class="btn btn-success">搜索</button>
 										  <button type="button" id="create" class="btn btn-info">添加</button>
@@ -68,13 +68,13 @@
 										<th><input type="checkbox"/></th>
 										<td>${e.id}</td>
 										<td>
-											<f:formatDate value="${e.date}" pattern="yyyy年MM月"/>
+											<f:formatDate value="${e.month}" pattern="yyyy年MM月"/>
 										</td>
-										<td>${e.name}</td>
-										<td>${e.card}</td>
+										<td>${e.person.name}</td>
+										<td>${e.person.card}</td>
 										<td>
 											<c:forEach items="${applicationScope.grade}" var="grade">
-												<c:if test="${e.grade == grade.key}">
+												<c:if test="${e.person.grade == grade.key}">
 													${grade.value}
 												</c:if>
 											</c:forEach>
