@@ -203,9 +203,7 @@ public class PersonController extends HttpServlet {
                     long ms = edate.getTime() - sdate.getTime();
                     /*如果s大于e则不查询，或者你自己去完善...*/
                     if(ms >= 0){
-                        params.put("ssd",ssd);
                         params.put("sdate",sdate);
-                        params.put("sed",sed);
                         params.put("edate",edate);
                     }
 

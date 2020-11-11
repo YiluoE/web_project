@@ -21,7 +21,15 @@ public class SubsidyRepositoryImpl implements SubsidyRepository {
     }
 
     @Override
-    public int delete(int id) {
+    public int delete(Map<String, Object> params) {
+        SqlSession sqlSession = MybatisUtils.openSqlSession();
+        int row = sqlSession.delete("subsidy.delete",params);
+        sqlSession.close();
+        return row;
+    }
+
+    @Override
+    public int batch(int[] ids, Map<String, Object> params) {
         return 0;
     }
 

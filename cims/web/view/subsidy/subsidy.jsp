@@ -27,6 +27,7 @@
 				  <form class="form-inline" role="form" id="subsidy">
 					  <input hidden id="thisPage" name="thisPage" value="${requestScope.params.thisPage}">
 					  <input hidden name="type" value="${requestScope.params.type}">
+					  <input hidden name="pageType" id="hiddenPageType" value="">
 					  <div class="row">
 						  <div class="col-lg-12">
 							  <section class="panel">
@@ -45,7 +46,7 @@
 										  </div>
 										  <button type="submit" class="btn btn-success">搜索</button>
 										  <button type="button" id="create" class="btn btn-info">添加</button>
-										  <button type="submit" class="btn btn-danger">批量删除</button>
+										  <button type="<%--submit--%>button" id="batch" class="btn btn-danger">批量删除</button>
 								  </div>
 							  </section>
 						  </div>
@@ -82,8 +83,8 @@
 										</td>
 										<td>${e.money}￥</td>
 										<td>
-											<button class="btn btn-primary btn-xs"><i class="icon-pencil"></i></button>
-											<button class="btn btn-danger btn-xs"><i class="icon-trash "></i></button>
+											<a class="btn btn-primary btn-xs" href="${pageContext.servletContext.contextPath}/subsidy.do?id=${e.id}&type=${requestScope.params.type}&pageType=update"><i class="icon-pencil"></i></a>
+											<button type="button" class="btn btn-danger btn-xs" id="${e.id}" name="btnDel"><i class="icon-trash "></i></button>
 										</td>
 									</tr>
 								</c:forEach>
@@ -114,10 +115,41 @@
     <script src="${pageContext.servletContext.contextPath}/static/js/jquery.js"></script>
     <script src="${pageContext.servletContext.contextPath}/static/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="${pageContext.servletContext.contextPath}/static/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  	<script src="${pageContext.request.contextPath}/static/js/layer-v3.1.1/layer/layer.js"></script>
     <script>
 
 		$(document).ready(function()
 		{
+			/*批量删除*/
+			$('#batch').on("click",function () {
+				if( $('[name=ids]:checked').length === 0){
+					layer.alert('请至少选择一条记录删除！',{
+						skin: 'layui-layer-molv',
+						closeBtn: 0,
+						anim: 4
+					});
+
+					return;
+				}
+
+				// 在这里 type没有必要因为隐藏域里已经有正确的 补贴类型了
+				// 在这里需要手动设置隐藏域里的 batchID
+				$('#hiddenPageType').attr('value','batch');
+				$('#subsidy').submit();
+
+			});
+
+			/*为删除按钮绑定点击*/
+			$('[name=btnDel]').on('click',function () {
+				let obj = this;
+
+				layer.confirm('是否确认删除该记录？',{
+					btn: ['确认','取消']
+				},function () {
+					window.location.href = '${pageContext.request.contextPath}/subsidy.do?id='+ $(obj).attr('id') +'&pageType=delete&type=${requestScope.params.type}';
+				});
+			});
+
 			/*添加操作*/
 			$('#create').bind('click',function () {
 				window.location.href="${pageContext.request.contextPath}/view/subsidy/create.jsp?type=${requestScope.params.type}&pageType=create";
@@ -160,8 +192,7 @@
 				}
 
 				$('#thisPage').val(thisPage);
-
-				$('#subsidy').submit();
+				$('#subsidy').attr('action','${pageContext.request.contextPath}/subsidy.do?') .submit();
 			});
 
 			$('#sdate').datepicker({

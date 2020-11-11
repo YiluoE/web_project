@@ -25,7 +25,8 @@ public interface SubsidyRepository {
      * @param id 主键
      * @return 1/0 成功/失败
      */
-    public abstract int delete(int id);
+    public abstract int delete(Map<String, Object> params);
+    public abstract int batch(int[] ids,Map<String,Object> params);
 
     /**
      * 修改补贴数据

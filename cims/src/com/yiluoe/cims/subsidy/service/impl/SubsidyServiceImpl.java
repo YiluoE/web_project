@@ -23,8 +23,17 @@ public class SubsidyServiceImpl implements SubsidyService {
     }
 
     @Override
-    public int delete(int id) {
-        return 0;
+    public int delete(Map<String, Object> params) {
+        return subsidyRepository.delete(params);
+    }
+
+    @Override
+    public int batch(String[] ids, Map<String, Object> params) {
+        int[] array = new int[ids.length];
+        for (int i = 0; i < ids.length; i++)
+            array[i] = Integer.parseInt(ids[i]);
+
+        return subsidyRepository.batch(array,params);
     }
 
     @Override

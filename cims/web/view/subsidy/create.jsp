@@ -10,22 +10,37 @@
     <meta name="author" content="Mosaddek">
     <link rel="shortcut icon" href="img/favicon.html">
     <title>补贴添加</title>
-    <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../../static/css/bootstrap-reset.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="../../static/assets/bootstrap-datepicker/css/datepicker.css" />
-    <link href="../../static/css/style.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/static/css/bootstrap-reset.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/assets/bootstrap-datepicker/css/datepicker.css" />
+    <link href="${pageContext.request.contextPath}/static/css/style.css" rel="stylesheet">
   <body>
   <section id="container" class="">
     <div class="row">
     <div class="col-lg-12">
       <section class="panel">
+          <%
+              String type = request.getParameter("type");
+              String pageType = request.getParameter("pageType");
+          %>
           <header class="panel-heading">
-              ${pageContext.request.getParameter("type")==1?"供暖":"物业"}补贴添加 >
+              <c:if test='<%=type.equals("1")%>'>
+                  供暖补贴
+              </c:if>
+              <c:if test='<%=type.equals("2")%>'>
+                  物业补贴
+              </c:if>
+              <c:if test='<%=pageType.equals("create")%>'>
+                  添加
+              </c:if>
+              <c:if test='<%=pageType.equals("update")%>'>
+                  修改
+              </c:if>
           </header>
           <div class="panel-body">
               <form class="form-horizontal tasi-form" id="subsidyForm" action="${pageContext.request.contextPath}/subsidy.do" method="post">
-                  <input hidden name="pageType" value="${pageContext.request.getParameter("pageType")}">
-                  <input hidden name="type" value="${pageContext.request.getParameter("type")}">
+                  <input hidden name="pageType" value="<%=pageType%>">
+                  <input hidden name="type" value="<%=type%>">
                   <div class="form-group">
                       <label class="col-sm-2 control-label">姓名</label>
                       <div class="col-sm-10">
@@ -64,9 +79,9 @@
       </section>
   </section>
 
-    <script src="../../static/js/jquery.js"></script>
-    <script src="../../static/js/bootstrap.min.js"></script>
-    <script src="../../static/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="${pageContext.request.contextPath}/static/js/jquery.js"></script>
+    <script src="${pageContext.request.contextPath}/static/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/static/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <script type="text/javascript">
       $(document).ready(function() 
       {

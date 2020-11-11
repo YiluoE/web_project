@@ -51,4 +51,8 @@
         limit #{offset},#{pageSize}
    </select>
 
+    <select id="delete" parameterType="Map">
+        delete from cims_subsidy where type = #{type} and id = #{id}
+    </select>
+
 </mapper>
