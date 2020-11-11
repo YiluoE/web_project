@@ -53,7 +53,7 @@ public class SubsidyServiceImpl implements SubsidyService {
 
     @Override
     public Subsidy queryById(int id) {
-        return null;
+        return subsidyRepository.queryById(id);
     }
 
     @Override

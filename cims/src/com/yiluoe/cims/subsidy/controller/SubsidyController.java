@@ -1,5 +1,7 @@
 package com.yiluoe.cims.subsidy.controller;
 
+import com.yiluoe.cims.person.entity.Person;
+import com.yiluoe.cims.subsidy.entity.Subsidy;
 import com.yiluoe.cims.subsidy.factory.SubsidyFactory;
 import com.yiluoe.cims.subsidy.service.SubsidyService;
 import com.yiluoe.cims.util.validate.Validator;
@@ -10,8 +12,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @program: cims
@@ -35,13 +40,19 @@ public class SubsidyController extends HttpServlet {
 
         //.收集页面参数 type:1供暖 type:2物业 pageType:create添加 pageType:update修改
         String pageType = req.getParameter("pageType");
-        if(req.getParameterValues("pageType").length > 1)
+        String[] pageTypeAry = req.getParameterValues("pageType");
+        if(null != pageTypeAry && pageTypeAry.length > 1)
             throw new NullPointerException("它出现了，两个pageType!");
 
         String typeParam = req.getParameter("type");
         int type = 0;
         if (Validator.isInteger(typeParam))
             type = Integer.parseInt(typeParam);
+
+        /*如果是提交类型*/
+        String submitType = req.getParameter("submitType");
+        if(null != submitType && !"".equals(submitType))
+            pageType = submitType;
 
         params.put("pageType",pageType);
         params.put("type",type);
@@ -72,7 +83,6 @@ public class SubsidyController extends HttpServlet {
             if(Validator.isNotEmpty(date) && !"".equals(date))
                 params.put("date",date);
 
-
             //.查询符合条件的总条数
             long count = subsidyService.queryByCount(params);
             int maxPage = (int)Math.ceil(count*1.0 / pageSize);
@@ -93,21 +103,30 @@ public class SubsidyController extends HttpServlet {
             req.getRequestDispatcher("view/subsidy/subsidy.jsp").forward(req,resp);
         }
         else if("create".equals(pageType)){
-            System.out.println(">>>>>>>>>>>>>>>>>>>>添 加<<<<<<<<<<<<<<<<<<<");
-            System.out.println(">>>>>>>>>>>>>>>>>>>>"+typeParam);
-
+            req.setAttribute("submitType",pageType+"Submit");
             //.收集并封装参数
-
-            resp.sendRedirect(req.getContextPath()+"/subsidy.do");
+            req.getRequestDispatcher("/view/subsidy/create.jsp").forward(req,resp);
+        }
+        else if("createSubmit".equals(pageType)){
+            /*收集数据直接插*/
+            /*但需要验证哦*/
         }
         else if("update".equals(pageType)){
-            System.out.println(">>>>>>>>>>>>>>>>>>>>修 改<<<<<<<<<<<<<<<<<<<");
-            System.out.println(">>>>>>>>>>>>>>>>>>>>"+typeParam);
-
-            //.收集数据id并查询返回 和 回显
-
-            req.getRequestDispatcher("/view/subsidy/create.jsp").forward(req,resp);
-            /*由于是分发器，jsp的servlet传来的请求在这里又传回了jsp所以css没了啊啊啊啊*/
+            String id = req.getParameter("id");
+            if(Validator.isNotEmpty(id) && Validator.isInteger(id)){
+                //.收集数据id并查询返回 和 回显
+                Subsidy subsidy = subsidyService.queryById(Integer.parseInt(id));
+                req.setAttribute("subsidy",subsidy);
+                req.setAttribute("submitType",pageType+"Submit");
+                req.setAttribute("id",id);
+                req.getRequestDispatcher("/view/subsidy/create.jsp").forward(req,resp);
+            }
+        }
+        else if("updateSubmit".equals(pageType)){
+            String id = req.getParameter("id");
+            Subsidy subsidy = pkg(req);
+            /*去写修改表的sql语句 记得要修改两个表哦 person标的name card reason 还有subsidy表的money*/
+            /*然后重定向到展示页面就可以了*/
         }
         else if("delete".equals(pageType)){
             String idParam = req.getParameter("id");
@@ -123,13 +142,31 @@ public class SubsidyController extends HttpServlet {
             String[] ids = req.getParameterValues("ids");
             if(ids.length < 1)
                 throw new NullPointerException("话说一条没选的话能进到这儿么！");
-            
+
             params.put("type",type);
             //.剩下的交给逻辑层
             subsidyService.batch(ids,params);
 
-            resp.sendRedirect(req.getContextPath()+"/subsidy.do");//到这了 数据层还没写呢
+            resp.sendRedirect(req.getContextPath()+"/subsidy.do?type="+typeParam);//到这了 数据层还没写呢
         }
 
     }
+
+    private Subsidy pkg(HttpServletRequest req){
+        Subsidy subsidy = new Subsidy();
+        subsidy.setPerson(new Person());
+
+        String money = req.getParameter("money");
+        Pattern pattern = Pattern.compile("\\d+[.]?\\d+");
+        Matcher matcher = pattern.matcher(money);
+        if(matcher.find())
+            subsidy.setMoney(new BigDecimal(matcher.group()));
+
+        subsidy.getPerson().setCard(req.getParameter("card"));
+        subsidy.getPerson().setName(req.getParameter("name"));
+        subsidy.getPerson().setReason(req.getParameter("reason"));
+
+        return subsidy;
+    }
+
 }

@@ -1,3 +1,4 @@
+<%@ page import="java.util.Enumeration" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -9,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mosaddek">
     <link rel="shortcut icon" href="img/favicon.html">
-    <title>补贴添加</title>
+    <title>补贴</title>
     <link href="${pageContext.request.contextPath}/static/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/static/css/bootstrap-reset.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/assets/bootstrap-datepicker/css/datepicker.css" />
@@ -21,7 +22,8 @@
       <section class="panel">
           <%
               String type = request.getParameter("type");
-              String pageType = request.getParameter("pageType");
+              String pageType = request.getParameter("submitType");
+              String title = "create".equals(request.getParameter("pageType"))?"添加":"修改";
           %>
           <header class="panel-heading">
               <c:if test='<%=type.equals("1")%>'>
@@ -30,48 +32,48 @@
               <c:if test='<%=type.equals("2")%>'>
                   物业补贴
               </c:if>
-              <c:if test='<%=pageType.equals("create")%>'>
-                  添加
-              </c:if>
-              <c:if test='<%=pageType.equals("update")%>'>
-                  修改
-              </c:if>
+              <%=title%>
           </header>
           <div class="panel-body">
-              <form class="form-horizontal tasi-form" id="subsidyForm" action="${pageContext.request.contextPath}/subsidy.do" method="post">
+              <form class="form-horizontal tasi-form" id="subsidyForm" action='${pageContext.request.contextPath}/subsidy.do' method="post">
                   <input hidden name="pageType" value="<%=pageType%>">
                   <input hidden name="type" value="<%=type%>">
+                  <input hidden name="id" value="${id}">
+                  <c:if test="${requestScope.submitType != null}">
+                      <input hidden name="submitType" value="${requestScope.submitType}">
+                  </c:if>
+
                   <div class="form-group">
                       <label class="col-sm-2 control-label">姓名</label>
                       <div class="col-sm-10">
-                          <input type="text" class="form-control" placeholder="输选择姓名" readonly required>
+                          <input type="text" class="form-control" placeholder="输选择姓名" name="name" value="${subsidy.person.name}" readonly required>
                           <span class="help-block">请选择人员!</span>
                       </div>
                   </div>
                   <div class="form-group">
                       <label class="col-sm-2 control-label">身份证号</label>
                       <div class="col-sm-10">
-                          <input type="text" class="form-control" placeholder="请选择姓名证件编号"  readonly required>
+                          <input type="text" class="form-control" name="card" value="${subsidy.person.card}" placeholder="请选择姓名证件编号"  readonly required>
                           <span class="help-block">根据选择的人员自动显示该人员的证件编号!</span>
                       </div>
                   </div>
                   <div class="form-group">
                       <label class="col-sm-2 control-label">补贴金额</label>
                       <div class="col-sm-10">
-                          <input type="text"  class="form-control" placeholder="请输入补贴金额">
+                          <input type="text" value="${subsidy.money}￥" name="money" class="form-control" placeholder="请输入补贴金额">
                       </div>
                   </div>
                   <div class="form-group">
                       <label class="col-sm-2 control-label">更改原因</label>
                       <div class="col-sm-10">
-                          <input type="text"  class="form-control" placeholder="请输入更改原因">
+                          <input type="text" value="${subsidy.person.reason}" name="reason" class="form-control" placeholder="请输入更改原因">
                       </div>
                   </div>
                   <div class="form-group">
                       <label class="col-lg-2 control-label"></label>
                       <div class="col-lg-10">
-                         <button type="submit" class="btn btn-success">添加</button>
-                         <button type="submit" class="btn btn-success">重置</button>
+                         <button class="btn btn-success"><%=title%></button>
+                         <button type="button" class="btn btn-success" onclick="javascript:window.history.go(-1)">重置</button>
                       </div>
                   </div>
               </form>
@@ -85,11 +87,6 @@
     <script type="text/javascript">
       $(document).ready(function() 
       {
-          /*为 添加提交按钮 绑定事件*/
-          /*$('#submit').on('click',function () {
-
-          });*/
-
 
         $('#date').datepicker({
                 format: 'yyyy-mm-dd'

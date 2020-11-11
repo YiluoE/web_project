@@ -56,7 +56,10 @@ public class SubsidyRepositoryImpl implements SubsidyRepository {
 
     @Override
     public Subsidy queryById(int id) {
-        return null;
+        SqlSession sqlSession = MybatisUtils.getSqlSession();
+        Subsidy subsidy = sqlSession.selectOne("subsidy.queryById",id);
+        sqlSession.close();
+        return subsidy;
     }
 
     @Override

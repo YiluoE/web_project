@@ -152,7 +152,7 @@
 
 			/*添加操作*/
 			$('#create').bind('click',function () {
-				window.location.href="${pageContext.request.contextPath}/view/subsidy/create.jsp?type=${requestScope.params.type}&pageType=create";
+				window.location.href="${pageContext.request.contextPath}/subsidy.do?type=${requestScope.params.type}&pageType=create";
 			});
 
 			/*全选按钮*/

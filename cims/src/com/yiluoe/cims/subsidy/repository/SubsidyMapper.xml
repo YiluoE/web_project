@@ -13,6 +13,7 @@
             <result property="name" column="name"/>
             <result property="card" column="card"/>
             <result property="grade" column="grade"/>
+            <result property="reason" column="reason"/>
         </association>
     </resultMap>
 
@@ -53,6 +54,12 @@
 
     <select id="delete" parameterType="Map">
         delete from cims_subsidy where type = #{type} and id = #{id}
+    </select>
+
+    <select id="queryById" parameterType="int" resultMap="subsidyMap">
+        select s.id as subsidyID,s.month,s.money,s.type,p.id as personID,p.name,p.card,p.grade,p.reason
+        from cims_subsidy s left join cims_person p on s.person_id = p.id
+        where s.id = #{id}
     </select>
 
 </mapper>
