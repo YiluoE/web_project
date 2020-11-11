@@ -12,11 +12,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,9 +33,34 @@ import java.util.Map;
 public class SubsidyController extends HttpServlet {
 
     private static SubsidyService subsidyService = SubsidyFactory.getService(); /*注入逻辑层接口*/
+    //DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        //.页面请求类型 添加|修改
+        String pageType = req.getParameter("pageType");
+        String typeParam = req.getParameter("type");
+
+        if(Validator.isNotEmpty(pageType) && !"".equals(pageType) && ( typeParam.equals("1") || typeParam.equals("2") ) ){
+
+            int type = Integer.parseInt(typeParam);
+
+            System.out.println(">>>>>>>>>>>>>>>>");
+            System.out.println(pageType);
+            System.out.println(type);
+
+            //.添加操作
+            if(pageType.equals("create")){
+                //.封装
+
+            }
+
+            //.修改属性
+            if(pageType.equals("update")){
+
+            }
+        }
 
         Map<String,Object> params = new HashMap<>();
 
@@ -57,15 +83,19 @@ public class SubsidyController extends HttpServlet {
             }
 
             //.收集查询参数
-            System.out.println("-----------------------------------------------------------");
-
             String name = req.getParameter("name");
-            params.put("name",name);
+            if(Validator.isNotEmpty(name) && !"".equals(name))
+                params.put("name",name);
 
             String card = req.getParameter("card");
-            params.put("card",card);
+            if(Validator.isNotEmpty(card) && !"".equals(card))
+                params.put("card",card);
 
-            System.out.println("-----------------------------------------------------------");
+            /*在sql语句里按日期查询*/
+            String date = req.getParameter("month");
+            if(Validator.isNotEmpty(date) && !"".equals(date)){
+                params.put("date",date);
+            }
 
             //.查询符合条件的总条数
             long count = subsidyService.queryByCount(params);

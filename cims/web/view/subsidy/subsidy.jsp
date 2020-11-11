@@ -26,6 +26,7 @@
                   </header>
 				  <form class="form-inline" role="form" id="subsidy">
 					  <input hidden id="thisPage" name="thisPage" value="${requestScope.params.thisPage}">
+					  <input hidden name="type" value="${requestScope.params.type}">
 					  <div class="row">
 						  <div class="col-lg-12">
 							  <section class="panel">
@@ -40,7 +41,7 @@
 										  </div>
 										  <div class="form-group">
 											  <label class="">月份</label>
-											  <input type="text" id="sdate" name="sdate" class="form-control" placeholder="请输入开始日期" readonly>
+											  <input type="text" id="sdate" name="month" class="form-control" placeholder="请输入开始日期" readonly>
 										  </div>
 										  <button type="submit" class="btn btn-success">搜索</button>
 										  <button type="button" id="create" class="btn btn-info">添加</button>
@@ -52,7 +53,7 @@
 					  <table class="table table-striped table-advance table-hover">
 						  <thead>
 								<tr>
-									<th><input type="checkbox"/></th>
+									<th><input type="checkbox" id="checkAll"/></th>
 									<th><i class="icon-bullhorn"></i>序号</th>
 									<th><i class="icon-male"></i>月份</th>
 									<th><i class="icon-bookmark"></i>姓名</th>
@@ -63,10 +64,10 @@
 								</tr>
 						  </thead>
 						  <tbody>
-								<c:forEach items="${requestScope.subsidyList}" var="e">
+								<c:forEach items="${requestScope.subsidyList}" var="e" varStatus="index">
 									<tr>
-										<th><input type="checkbox"/></th>
-										<td>${e.id}</td>
+										<th><input type="checkbox" name="ids" value="${e.id}"/></th>
+										<td>${(params.thisPage-1)*10+index.count}</td>
 										<td>
 											<f:formatDate value="${e.month}" pattern="yyyy年MM月"/>
 										</td>
@@ -117,6 +118,28 @@
 
 		$(document).ready(function()
 		{
+			/*添加操作*/
+			$('#create').bind('click',function () {
+				window.location.href="${pageContext.request.contextPath}/view/subsidy/create.jsp?type=${requestScope.params.type}&pageType=create";
+			});
+
+			/*全选按钮*/
+			$('#checkAll').on('click',function () {
+				$('[name=ids]').prop('checked',this.checked);
+			});
+
+			/*动态全选*/
+			$('[name=ids]').on('click',function () {
+				let object = $('#checkAll');
+
+				let idsNum = $('[name=ids]').length;
+				let idsCheckedNum = $('[name=ids]:checked').length;
+
+				if( idsCheckedNum === idsNum )
+					object.prop('checked',true);
+				else
+					object.prop('checked',false);
+			});
 
 			// 为翻页按钮绑定事件
 			$('.btn-group>button').on('click',function () {
@@ -141,11 +164,6 @@
 				$('#subsidy').submit();
 			});
 
-
-			$('#create').bind('click', function()
-			{
-				window.location.href='./create.html';
-			});
 			$('#sdate').datepicker({
 	            format: 'yyyy-mm'
 	        });

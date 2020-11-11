@@ -152,6 +152,9 @@
                 if(num < 1){
                     $('#msg').css({"color":"#ff0000"});
                 }
+                else{
+                    $('#msg').css({"color":"#ffffff"});
+                }
 
                 $('#property').css({"border-color":"#ff0000"});
             }

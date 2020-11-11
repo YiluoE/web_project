@@ -1,3 +1,6 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="zh">
   <head>
@@ -13,15 +16,16 @@
     <link href="../../static/css/style.css" rel="stylesheet">
   <body>
   <section id="container" class="">
-     
     <div class="row">
     <div class="col-lg-12">
       <section class="panel">
           <header class="panel-heading">
-             （供暖/物业）补贴添加
+              ${pageContext.request.getParameter("type")==1?"供暖":"物业"}补贴添加 >
           </header>
           <div class="panel-body">
-              <form class="form-horizontal tasi-form" method="post">
+              <form class="form-horizontal tasi-form" id="subsidyForm" action="${pageContext.request.contextPath}/subsidy.do" method="post">
+                  <input hidden name="pageType" value="${pageContext.request.getParameter("pageType")}">
+                  <input hidden name="type" value="${pageContext.request.getParameter("type")}">
                   <div class="form-group">
                       <label class="col-sm-2 control-label">姓名</label>
                       <div class="col-sm-10">
@@ -36,7 +40,7 @@
                           <span class="help-block">根据选择的人员自动显示该人员的证件编号!</span>
                       </div>
                   </div>
-                 <div class="form-group">
+                  <div class="form-group">
                       <label class="col-sm-2 control-label">补贴金额</label>
                       <div class="col-sm-10">
                           <input type="text"  class="form-control" placeholder="请输入补贴金额">
@@ -66,6 +70,12 @@
     <script type="text/javascript">
       $(document).ready(function() 
       {
+          /*为 添加提交按钮 绑定事件*/
+          /*$('#submit').on('click',function () {
+
+          });*/
+
+
         $('#date').datepicker({
                 format: 'yyyy-mm-dd'
         });

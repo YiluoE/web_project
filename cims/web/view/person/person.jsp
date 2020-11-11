@@ -164,7 +164,6 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 
     <script>
-		/*$('#state').val(${requestScope.params.state});*/
 
 		$(document).ready(function() 
 		{

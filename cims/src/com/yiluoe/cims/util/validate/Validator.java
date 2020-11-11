@@ -140,4 +140,31 @@ public class Validator {
         return false;
     }
 
+    public static void print(String string){
+        String xingxing = "*****************************************************************";
+
+        System.out.println(
+                xingxing + "\n" +
+                xingxing + "\n" +
+                xingxing
+        );
+
+        int xingxingLength = (int)Math.ceil((xingxing.length()-string.length())*1.0 / 2)-1;
+        for (int i = 0; i < xingxingLength; i++) {
+            System.out.print("*");
+        }
+
+        System.out.print(string);
+
+        for (int i = 0; i < xingxingLength; i++) {
+            System.out.print("*");
+        }
+
+        System.out.println(
+                "\n" + xingxing + "\n" +
+                xingxing + "\n" +
+                xingxing
+        );
+    }
+
 }

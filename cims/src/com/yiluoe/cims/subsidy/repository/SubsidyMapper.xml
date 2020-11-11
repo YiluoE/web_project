@@ -16,19 +16,20 @@
         </association>
     </resultMap>
 
-    <select id="queryAll" resultMap="subsidyMap" parameterType="Map">
-        select s.id as subsidyID,s.month,s.money,s.type,p.id as personID,p.name,p.card,p.grade
-        from cims_subsidy s left join cims_person p on s.person_id = p.id
-        <where>
-            type=#{type}
-        </where>
-    </select>
-
     <select id="queryByCount" resultType="Long" parameterType="Map">
         select count(1)
         from cims_subsidy s left join cims_person p on s.person_id = p.id
         <where>
             type=#{type}
+            <if test="null != name and '' != name ">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="null != card and '' != card ">
+                and card = #{card}
+            </if>
+            <if test="null != date and '' != date ">
+                and concat(year(s.month),'-',lpad(month(s.month),2,'0'))=#{date}
+            </if>
         </where>
     </select>
 
@@ -37,6 +38,15 @@
         from cims_subsidy s left join cims_person p on s.person_id = p.id
         <where>
             type=#{type}
+            <if test="null != name and '' != name ">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="null != card and '' != card ">
+                and card = #{card}
+            </if>
+            <if test="null != date and '' != date ">
+                and concat(year(s.month),'-',lpad(month(s.month),2,'0'))=#{date}
+            </if>
         </where>
         limit #{offset},#{pageSize}
    </select>
