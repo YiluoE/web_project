@@ -34,6 +34,14 @@ public class SubsidyRepositoryImpl implements SubsidyRepository {
     }
 
     @Override
+    public List<Map<String, Object>> querySubsidyPerson(int type) {
+        SqlSession sqlSession = MybatisUtils.getSqlSession();
+        List<Map<String,Object>> list = sqlSession.selectList("subsidy.querySubsidyPerson",Map.of("type",type));
+        sqlSession.close();
+        return list;
+    }
+
+    @Override
     public int update(Subsidy entity) {
         return 0;
     }

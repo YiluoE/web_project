@@ -39,7 +39,7 @@ public class PersonController extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // 收集客户端操作类型
-        String formType = req.getParameter("formType");
+            String formType = req.getParameter("formType");
         /*添加操作*/
         if(Validator.isNotEmpty(formType) && "create".equals(formType)){
             //1.收集参数
@@ -160,6 +160,19 @@ public class PersonController extends HttpServlet {
             }
             //3.返回响应
             resp.sendRedirect(req.getContextPath()+"/person.do");
+        }
+        /*效验身份证唯一性*/
+        else if(Validator.isNotEmpty(formType) && "card".equals(formType)){
+            //1. 获取前端请求的身份证号码
+            String card = req.getParameter("card");
+
+            if(Validator.isNotEmpty(card) && card.length() == 18 ){
+                //2.查询数据库
+                Map<String,Object> p = Map.of("card",card);
+                long count = personService.queryByCount(p);
+
+                //3.返回响应
+            }
         }
         /*查询操作*/
         else {

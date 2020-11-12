@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -148,6 +150,25 @@ public class SubsidyController extends HttpServlet {
             subsidyService.batch(ids,params);
 
             resp.sendRedirect(req.getContextPath()+"/subsidy.do?type="+typeParam);//到这了 数据层还没写呢
+        }
+        else if("subsidyPerson".equals(pageType)){
+            List<Map<String,Object>> list = subsidyService.querySubsidyPerson(type);
+
+            StringBuilder stringBuilder = new StringBuilder("[");
+            for (int i = 0; i < list.size(); i++) {
+                Map<String,Object> o = list.get(i);
+
+                stringBuilder.append("{\"id\": "+o.get("id")+",\"name\": \""+o.get("name")+"\",\"card\": \""+o.get("card")+"\"}");
+                if(i < list.size() -1)
+                    stringBuilder.append(",");
+            }
+            stringBuilder.append("]");
+
+            resp.setContentType("application/json;charset=utf8");
+            PrintWriter writer = resp.getWriter();
+            writer.write(stringBuilder.toString());
+            writer.flush();
+            writer.close();
         }
 
     }

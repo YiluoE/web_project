@@ -26,8 +26,8 @@
                   </header>
 				  <form class="form-inline" role="form" id="subsidy">
 					  <input hidden id="thisPage" name="thisPage" value="${requestScope.params.thisPage}">
-					  <input hidden name="type" value="${requestScope.params.type}">
 					  <input hidden name="pageType" id="hiddenPageType" value="">
+					  <input hidden name="type" value="${requestScope.params.type}">
 					  <div class="row">
 						  <div class="col-lg-12">
 							  <section class="panel">

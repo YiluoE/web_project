@@ -28,6 +28,8 @@ public interface SubsidyRepository {
     public abstract int delete(Map<String, Object> params);
     public abstract int batch(int[] ids,Map<String,Object> params);
 
+    public abstract List<Map<String,Object>> querySubsidyPerson(int type);
+
     /**
      * 修改补贴数据
      * @param entity entity实体

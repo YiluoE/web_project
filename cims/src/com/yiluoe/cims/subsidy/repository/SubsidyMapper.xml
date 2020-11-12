@@ -61,5 +61,17 @@
         from cims_subsidy s left join cims_person p on s.person_id = p.id
         where s.id = #{id}
     </select>
+    
+    <select id="querySubsidyPerson" parameterType="Map" resultType="Map">
+        select id,name,card from cims_person where
+        <if test="type == 1">
+            heating = 1
+        </if>
+        <if test="type == 2">
+            property = 1
+        </if>
+        and id not in (select person_id from cims_subsidy
+            where year(month) = year(now()) and month(month) = month(now()) and type = #{type})
+    </select>
 
 </mapper>

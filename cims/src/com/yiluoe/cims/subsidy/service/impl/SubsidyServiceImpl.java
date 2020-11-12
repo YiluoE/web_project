@@ -37,6 +37,11 @@ public class SubsidyServiceImpl implements SubsidyService {
     }
 
     @Override
+    public List<Map<String, Object>> querySubsidyPerson(int type) {
+        return subsidyRepository.querySubsidyPerson(type);
+    }
+
+    @Override
     public int update(Subsidy entity) {
         return 0;
     }

@@ -22,7 +22,7 @@
              人员添加
           </header>
           <div class="panel-body">
-              <form class="form-horizontal tasi-form" id="createForm" action="${pageContext.request.contextPath}/person.do" method="post">
+              <form class="form-horizontal tasi-form" id="createForm" action="${pageContext.request.contextPath}/person.do" method="post" <%--enctype="application/x-www-form-urlencoded"--%>>
                   <input type="hidden" name="formType" value="create">
                   <div class="form-group">
                       <label class="col-sm-2 control-label">姓名</label>
@@ -99,9 +99,69 @@
     <script src="${pageContext.request.contextPath}/static/js/jquery.js"></script>
     <script src="${pageContext.request.contextPath}/static/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/static/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="${pageContext.request.contextPath}/static/js/layer-v3.1.1/layer/layer.js"></script>
     <script type="text/javascript">
       $(document).ready(function() 
       {
+
+          /*动态效验*/
+          $('[name=card]').on('blur',function () {
+              let card = $(this).val();
+              if($.trim(card).length === 18){ /*通过ajax发送异步请求*/
+                  //1. 创建ajax引擎对象
+                  let xmlHttpRequest = new XMLHttpRequest();
+
+                  //2.指定响应处理函数
+                  xmlHttpRequest.onreadystatechange = function () {
+                      /**
+                       * readyState 0-4
+                       * 0: ajax未初始化
+                       * 1: 未配置请求参数
+                       * 2: 已配置请求参数，但为发出请求
+                       * 3: 客户端发出请求，服务器还未返回响应
+                       * 4: 服务器已经返回响应（其它的可能出现多次，尤其是3）
+                       */
+
+                      //2.1 发出请求既弹出装载层
+                      layer.load();
+                      if(xmlHttpRequest.readyState === 4){
+                          //2.2 服务器返回响应后关闭装载...
+                          layer.closeAll('loading');
+                          //2.3 接收服务器返回响应状态码
+                          if(xmlHttpRequest.status === 200){
+                              /**
+                               * ajax只能接收服务器返回的两种数据格式
+                               * 1. string 字符串 responseText
+                               * 2. xml 文档 responseXML
+                               */
+
+                              //2.4 获取服务器返回的响应内容
+                              alert(xmlHttpRequest.responseXML);
+
+                              /*XML类型操作*/
+                              /*Document document = xmlHttpRequest.responseXML;
+                              Node node = document.getRootNode();*/
+                              /*...*/
+
+                          }
+                          else {
+                              layer.msg('出现了点问题。');
+                          }
+                      }
+                  }
+
+                  //3.配置请求相关参数
+                  xmlHttpRequest.open('post','${pageContext.request.contextPath}/person.do');
+                  //4.发出请求并携带参数
+                  xmlHttpRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+                  xmlHttpRequest.send('formType=card&card='+card);
+
+
+              }
+
+              $(this).next().html('<font color="#ff0000">请输入正确的身份证号码！</font>')
+          });
+
 
         $('#addButton').on('click',function () {
 
