@@ -19,7 +19,7 @@ public class SubsidyServiceImpl implements SubsidyService {
 
     @Override
     public int insert(Subsidy entity) {
-        return 0;
+        return subsidyRepository.insert(entity);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class SubsidyServiceImpl implements SubsidyService {
 
     @Override
     public int update(Subsidy entity) {
-        return 0;
+        return subsidyRepository.update(entity);
     }
 
     @Override

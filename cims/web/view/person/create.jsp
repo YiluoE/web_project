@@ -19,7 +19,7 @@
     <div class="col-lg-12">
       <section class="panel">
           <header class="panel-heading">
-             人员添加
+             人员添加${pageContext}
           </header>
           <div class="panel-body">
               <form class="form-horizontal tasi-form" id="createForm" action="${pageContext.request.contextPath}/person.do" method="post" <%--enctype="application/x-www-form-urlencoded"--%>>
@@ -87,7 +87,7 @@
                   <div class="form-group">
                       <label class="col-lg-2 control-label"></label>
                       <div class="col-lg-10">
-                         <button type="button" id="addButton" class="btn btn-success">添加</button>
+                         <button type="button" id="addButton" class="btn btn-success" disabled>添加</button>
                          <button type="button" class="btn btn-success" onclick="javascript:window.history.go(-1)">返回</button>
                       </div>
                   </div>
@@ -106,8 +106,13 @@
 
           /*动态效验*/
           $('[name=card]').on('blur',function () {
+              let object = $(this);
               let card = $(this).val();
-              if($.trim(card).length === 18){ /*通过ajax发送异步请求*/
+
+              /*412723199909255976*/
+              if($.trim(card).match(/^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/) != null)
+              {
+                  /*通过ajax发送异步请求*/
                   //1. 创建ajax引擎对象
                   let xmlHttpRequest = new XMLHttpRequest();
 
@@ -136,7 +141,17 @@
                                */
 
                               //2.4 获取服务器返回的响应内容
-                              alert(xmlHttpRequest.responseXML);
+                              let addBtnObj = $('#addButton');
+                              if( 0 == xmlHttpRequest.responseText ){
+                                  $(object).next().html('<font></font>');
+                                  $(object).css({"border-color":"#00ff00"});
+                                  $(addBtnObj).attr('disabled',false);
+                              }
+                              else {
+                                  $(object).css({"border-color":"#ff0000"});
+                                  $(object).next().html('<font color="#ff0000">card不是惟一的！</font>');
+                                  $(addBtnObj).attr('disabled',true);
+                              }
 
                               /*XML类型操作*/
                               /*Document document = xmlHttpRequest.responseXML;
@@ -158,8 +173,9 @@
 
 
               }
+              else
+                $(object).next().html('<font color="#ff0000">格式不正确！</font>');
 
-              $(this).next().html('<font color="#ff0000">请输入正确的身份证号码！</font>')
           });
 
 
@@ -209,12 +225,11 @@
                 if ( $('#property').prop(('checked')) == true )
                     num++;
 
-                if(num < 1){
-                    $('#msg').css({"color":"#ff0000"});
-                }
-                else{
-                    $('#msg').css({"color":"#ffffff"});
-                }
+                /*有点小浮动~*/
+                if(num < 1)
+                    $('#msg').html('<font color="#ff0000">至少选择一条补贴项！</font>')
+                else
+                    $('#msg').html('<font></font>')
 
                 $('#property').css({"border-color":"#ff0000"});
             }

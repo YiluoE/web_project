@@ -21,6 +21,8 @@ public class Subsidy {
     private BigDecimal money;
     //类型 1:供暖 2:物业
     private int type;
+    //外键
+    private int personID;
 
     private Person person;
 
@@ -33,6 +35,14 @@ public class Subsidy {
                 ", type=" + type +
                 ", person=" + person +
                 '}';
+    }
+
+    public int getPersonID() {
+        return personID;
+    }
+
+    public void setPersonID(int personID) {
+        this.personID = personID;
     }
 
     public Person getPerson() {

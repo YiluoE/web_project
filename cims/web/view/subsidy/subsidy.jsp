@@ -9,11 +9,11 @@
     <meta name="description" content="">
     <meta name="author" content="javakc-zhg">
  	<link rel="shortcut icon" href="img/favicon.html">
-    <title>${requestScope.params.type == 1?"供暖":"物业"}管理</title>
+    <title>只是标题而已了</title>
     <link href="${pageContext.servletContext.contextPath}/static/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.servletContext.contextPath}/static/css/bootstrap-reset.css" rel="stylesheet">
     <link href="${pageContext.servletContext.contextPath}/static/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="${pageContext.servletContext.contextPath}/static/assets/bootstrap-datepicker/css/datepicker.css" />
+    <link href="${pageContext.servletContext.contextPath}/static/assets/bootstrap-datepicker/css/datepicker.css" />
     <link href="${pageContext.servletContext.contextPath}/static/css/style.css" rel="stylesheet">
   </head>
   <body>
@@ -22,31 +22,32 @@
           <div class="col-lg-12">
               <section class="panel">
                   <header class="panel-heading">
-					  ${requestScope.params.type == 1?"供暖":"物业"}补贴
+					  ${params.type == 1?"供暖":"物业"}补贴
                   </header>
 				  <form class="form-inline" role="form" id="subsidy">
-					  <input hidden id="thisPage" name="thisPage" value="${requestScope.params.thisPage}">
+					  <input hidden id="thisPage" name="thisPage" value="${params.thisPage}">
 					  <input hidden name="pageType" id="hiddenPageType" value="">
-					  <input hidden name="type" value="${requestScope.params.type}">
+					  <input hidden name="type" value="${params.type}">
 					  <div class="row">
 						  <div class="col-lg-12">
 							  <section class="panel">
 								  <div class="panel-body">
 										  <div class="form-group">
 											  <label class="">姓名</label>
-											  <input type="text" class="form-control" name="name" placeholder="输入姓名">
+											  <input type="text" class="form-control" name="name" value="${params.name}" placeholder="输入姓名">
 										  </div>
 										  <div class="form-group">
 											  <label class="">身份证号</label>
-											  <input type="text" name="card" class="form-control" placeholder="请输入身份证号">
+											  <input type="text" name="card" class="form-control" value="${params.card}" placeholder="请输入身份证号">
+
 										  </div>
 										  <div class="form-group">
 											  <label class="">月份</label>
-											  <input type="text" id="sdate" name="month" class="form-control" placeholder="请输入开始日期" readonly>
+											  <input type="text" id="sdate" name="month" class="form-control" value='<f:formatDate value="${params.utilDate}" pattern="yyyy-MM"/>' placeholder="请输入开始日期" readonly>
 										  </div>
 										  <button type="submit" class="btn btn-success">搜索</button>
 										  <button type="button" id="create" class="btn btn-info">添加</button>
-										  <button type="<%--submit--%>button" id="batch" class="btn btn-danger">批量删除</button>
+										  <button type="button" id="batch" class="btn btn-danger">批量删除</button>
 								  </div>
 							  </section>
 						  </div>
@@ -83,7 +84,7 @@
 										</td>
 										<td>${e.money}￥</td>
 										<td>
-											<a class="btn btn-primary btn-xs" href="${pageContext.servletContext.contextPath}/subsidy.do?id=${e.id}&type=${requestScope.params.type}&pageType=update"><i class="icon-pencil"></i></a>
+											<a class="btn btn-primary btn-xs" href="${pageContext.servletContext.contextPath}/subsidy.do?id=${e.id}&type=${params.type}&pageType=update"><i class="icon-pencil"></i></a>
 											<button type="button" class="btn btn-danger btn-xs" id="${e.id}" name="btnDel"><i class="icon-trash "></i></button>
 										</td>
 									</tr>
@@ -146,13 +147,13 @@
 				layer.confirm('是否确认删除该记录？',{
 					btn: ['确认','取消']
 				},function () {
-					window.location.href = '${pageContext.request.contextPath}/subsidy.do?id='+ $(obj).attr('id') +'&pageType=delete&type=${requestScope.params.type}';
+					window.location.href = '${pageContext.request.contextPath}/subsidy.do?id='+ $(obj).attr('id') +'&pageType=delete&type=${params.type}';
 				});
 			});
 
 			/*添加操作*/
 			$('#create').bind('click',function () {
-				window.location.href="${pageContext.request.contextPath}/subsidy.do?type=${requestScope.params.type}&pageType=create";
+				window.location.href="${pageContext.request.contextPath}/view/subsidy/create.jsp?type="+${param.type};
 			});
 
 			/*全选按钮*/

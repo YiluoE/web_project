@@ -17,6 +17,7 @@ import java.util.Map;
  * @create: 2020/11/6 14:50
  **/
 public class PersonRepositoryImpl implements PersonRepository {
+
     @Override
     public int insert(Person entity) {
         SqlSession sqlSession = MybatisUtils.getSqlSession();
@@ -88,5 +89,13 @@ public class PersonRepositoryImpl implements PersonRepository {
         long count = sqlSession.selectOne("person.queryByCount",params);
         sqlSession.close();
         return count;
+    }
+
+    @Override
+    public Map<String, Object> findSubsidy(int id) {
+        SqlSession sqlSession = MybatisUtils.openSqlSession();
+        Map<String,Object> resultMap = sqlSession.selectOne("person.findSubsidy",id);
+        sqlSession.close();
+        return resultMap;
     }
 }

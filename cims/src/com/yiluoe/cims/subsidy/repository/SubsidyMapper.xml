@@ -4,11 +4,13 @@
 <mapper namespace="subsidy">
     
     <resultMap id="subsidyMap" type="subsidy">
-        <id property="id" column="subsidyID"/> <!-- column="id" 查询结果中寻找字段 -->
+        <!-- column="id" 查询结果中寻找字段 -->
+        <id property="id" column="subsidyID"/>
         <result property="month" column="month"/>
         <result property="money" column="money"/>
         <result property="type" column="type"/>
-        <association property="person" javaType="person"> <!--property="person"父级属性--> <!--javaType="person"别名-->
+        <!--property="person"父级属性--> <!--javaType="person"别名-->
+        <association property="person" javaType="person">
             <id property="id" column="personID"/>
             <result property="name" column="name"/>
             <result property="card" column="card"/>
@@ -61,7 +63,8 @@
         from cims_subsidy s left join cims_person p on s.person_id = p.id
         where s.id = #{id}
     </select>
-    
+
+    <!--查询本月没有补贴过的人员-->
     <select id="querySubsidyPerson" parameterType="Map" resultType="Map">
         select id,name,card from cims_person where
         <if test="type == 1">
@@ -73,5 +76,25 @@
         and id not in (select person_id from cims_subsidy
             where year(month) = year(now()) and month(month) = month(now()) and type = #{type})
     </select>
+
+    <insert id="insert" parameterType="subsidy">
+        insert into cims_subsidy(month, money, type, person_id)
+        values(now(),#{money},#{type},#{personID})
+    </insert>
+
+    <update id="update" parameterType="subsidy">
+        update cims_subsidy cs inner join cims_person cp on cs.person_id = cp.id
+        set cs.money=#{money},cp.reason=#{person.reason}
+        where cs.id=#{id} and cs.type=#{type}
+    </update>
+
+    <!--Map里包含两种类型的值int ids[] 和 int type-->
+    <delete id="batch" parameterType="Map">
+        delete from cims_subsidy where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and type = #{type}
+    </delete>
 
 </mapper>

@@ -164,7 +164,7 @@
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <img alt="" src="static/img/avatar1_small.jpg">
-                            <span class="username">博安</span>
+                            <span class="username">baba</span>
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu extended logout">
@@ -208,6 +208,7 @@
                       <ul class="sub">
                           <li><a class="" href="${pageContext.request.contextPath}/subsidy.do?type=1" target="mainFrame">供暖补贴</a></li>
                           <li><a class="" href="${pageContext.request.contextPath}/subsidy.do?type=2" target="mainFrame">物业补贴</a></li>
+                          <li><a class="" href="${pageContext.request.contextPath}/pigeonhole.do" target="mainFrame">归档</a></li>
                       </ul>
                   </li>
               </ul>

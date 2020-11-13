@@ -74,7 +74,7 @@
 									  </div>
 									  <button type="submit" class="btn btn-success">搜索</button>
 									  <button type="button" id="create" class="btn btn-info">添加</button>
-									  <button type="button" id="batch" class="btn btn-danger">批量删除</button>
+									  <button type="button" id="batch" class="btn btn-danger" disabled>批量删除</button>
 								  </div>
 							  </section>
 						  </div>
@@ -106,10 +106,10 @@
 										  <c:forEach items="${applicationScope.state}" var="state">
 											  <c:if test="${state.key == entity.state}"> <%--默认requestScope--%>
 												  <c:if test="${entity.state == 1}">
-													  <span class="label label-success label-mini">离休</span>
+													  <span class="label label-success label-mini">${state.value}</span>
 												  </c:if>
 												  <c:if test="${entity.state == 2}">
-													  <span class="label label-danger label-mini">退休</span>
+													  <span class="label label-danger label-mini">${state.value}</span>
 												  </c:if>
 											  </c:if>
 										  </c:forEach>
@@ -130,8 +130,8 @@
 									  <td>${entity.property == 0?"否":"是"}</td>
 									  <td>
 										  <a class="btn btn-primary btn-xs" href="${pageContext.request.contextPath}/person.do?id=${entity.id}&formType=load"><i class="icon-pencil"></i></a>
-										  <button type="button" id="${entity.id}" class="btn btn-danger btn-xs" name="delete"><i class="icon-trash "></i></button>
-									  </td>
+										  <button type="button" name="delete" value="${entity.id}" class="btn btn-danger btn-xs"><i class="icon-trash "></i></button>
+									  </td>·
 								  </tr>
 							  </c:forEach>
 						  </tbody>
@@ -194,15 +194,33 @@
 
 			});
 
-			$('[name=delete]').on('click',function ()
+			$('[name=delete]').on('click',function () /*为什么是name因为id是惟一的所以不能绑id*/
 			{
-				let object = this;
+				let pid = $(this).val();
 
-				layer.confirm('是否确认删除该记录？',{
+				let content = '';
+				let xmlHttpRequest = new XMLHttpRequest();
+				xmlHttpRequest.onreadystatechange = function () {
+
+					if(xmlHttpRequest.readyState === 4 && xmlHttpRequest.status === 200){
+						let data = xmlHttpRequest.responseText;
+						content = JSON.parse(data);
+					}
+				};
+
+				xmlHttpRequest.open('get','${pageContext.request.contextPath}/person.do?formType=findSubsidy&pid='+pid,false);
+				xmlHttpRequest.send();
+
+
+
+				let index = layer.confirm('该人员已经绑定了：'+ content.count + '个补贴记录'
+						+ '，总金额： ' +  content.sum + '$',
+				{
 					btn: ['确认','取消']
 				},function () {
-					let id = $(object).attr('id');
-					window.location.href = '${pageContext.request.contextPath}/person.do?id='+id+'&formType=delete';
+					$('#personForm').attr('action','${pageContext.request.contextPath}/person.do?formType=delete&id='+pid).submit();
+
+					layer.close(index);
 				});
 
 			});

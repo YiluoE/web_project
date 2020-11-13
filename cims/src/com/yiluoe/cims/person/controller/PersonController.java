@@ -2,7 +2,10 @@ package com.yiluoe.cims.person.controller;
 
 import com.yiluoe.cims.person.entity.Person;
 import com.yiluoe.cims.person.factory.PersonFactory;
+import com.yiluoe.cims.person.repository.PersonRepository;
+import com.yiluoe.cims.person.repository.impl.PersonRepositoryImpl;
 import com.yiluoe.cims.person.service.PersonService;
+import com.yiluoe.cims.subsidy.repository.SubsidyRepository;
 import com.yiluoe.cims.util.validate.Validator;
 
 import javax.servlet.ServletException;
@@ -11,10 +14,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +41,7 @@ public class PersonController extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // 收集客户端操作类型
-            String formType = req.getParameter("formType");
+        String formType = req.getParameter("formType");
         /*添加操作*/
         if(Validator.isNotEmpty(formType) && "create".equals(formType)){
             //1.收集参数
@@ -142,13 +144,28 @@ public class PersonController extends HttpServlet {
             String idParam = req.getParameter("id");
             int id = 0;
             if(!Validator.isInteger(idParam))
-                return;
+                throw new NullPointerException("怎么可能！");
 
             id = Integer.parseInt(idParam);
 
             personService.delete(id);
             /*返回响应*/
             resp.sendRedirect(req.getContextPath()+"/person.do");
+        }
+        /*查询人员绑定的补贴*/
+        else if(Validator.isNotEmpty(formType) && "findSubsidy".equals(formType)){
+            String pid = req.getParameter("pid");
+            Map<String,Object> result = personService.findSubsidy(Integer.parseInt(pid));
+
+            StringBuilder stringBuilder = new StringBuilder("{");
+            stringBuilder.append("\"count\":"+result.get("count")+",\"sum\":"+result.get("sum"));
+            stringBuilder.append("}");
+
+            resp.setContentType("application/json;charset-utf8");
+            PrintWriter writer = resp.getWriter();
+            writer.write(stringBuilder.toString());
+            writer.flush();
+            writer.close();
         }
         /*批量删除人员数据*/
         else if(Validator.isNotEmpty(formType) && "batch".equals(formType)){
@@ -172,6 +189,10 @@ public class PersonController extends HttpServlet {
                 long count = personService.queryByCount(p);
 
                 //3.返回响应
+                PrintWriter writer = resp.getWriter();
+                writer.write(count+"");
+                writer.flush();
+                writer.close();
             }
         }
         /*查询操作*/
@@ -196,6 +217,7 @@ public class PersonController extends HttpServlet {
             params.put("pageSize",pageSize);
             params.put("name",req.getParameter("name"));
             params.put("card",req.getParameter("card"));
+            params.put("sign",1); /*查询所有未归档人员*/
 
             String state = req.getParameter("state");
             if(Validator.isInteger(state)){
@@ -216,6 +238,8 @@ public class PersonController extends HttpServlet {
                     long ms = edate.getTime() - sdate.getTime();
                     /*如果s大于e则不查询，或者你自己去完善...*/
                     if(ms >= 0){
+                        params.put("ssd",ssd);
+                        params.put("sed",sed);
                         params.put("sdate",sdate);
                         params.put("edate",edate);
                     }

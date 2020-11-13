@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,24 +36,23 @@ import java.util.regex.Pattern;
 public class SubsidyController extends HttpServlet {
 
     private static SubsidyService subsidyService = SubsidyFactory.getService(); /*注入逻辑层接口*/
-    //DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Map<String,Object> params = new HashMap<>();
 
-        //.收集页面参数 type:1供暖 type:2物业 pageType:create添加 pageType:update修改
+        //. 获取请求类型 pageType: update submitUpdate create
         String pageType = req.getParameter("pageType");
-        String[] pageTypeAry = req.getParameterValues("pageType");
-        if(null != pageTypeAry && pageTypeAry.length > 1)
-            throw new NullPointerException("它出现了，两个pageType!");
 
+        //. 收集补贴类型 一张表的难处
         String typeParam = req.getParameter("type");
         int type = 0;
         if (Validator.isInteger(typeParam))
             type = Integer.parseInt(typeParam);
 
+        /*........感觉没用.........*/
         /*如果是提交类型*/
         String submitType = req.getParameter("submitType");
         if(null != submitType && !"".equals(submitType))
@@ -81,9 +83,17 @@ public class SubsidyController extends HttpServlet {
                 params.put("card",card);
 
             /*在sql语句里按日期查询*/
-            String date = req.getParameter("month");
-            if(Validator.isNotEmpty(date) && !"".equals(date))
-                params.put("date",date);
+            String dateStr = req.getParameter("month");
+            if(Validator.isNotEmpty(dateStr) && !"".equals(dateStr)){
+                Date utilDate = null;
+                try {
+                    utilDate = simpleDateFormat.parse(dateStr);
+                    params.put("date",dateStr);
+                    params.put("utilDate",utilDate);
+                } catch (ParseException e) {
+                    System.out.println("啊？？？？" + e.getMessage());
+                }
+            }
 
             //.查询符合条件的总条数
             long count = subsidyService.queryByCount(params);
@@ -105,13 +115,13 @@ public class SubsidyController extends HttpServlet {
             req.getRequestDispatcher("view/subsidy/subsidy.jsp").forward(req,resp);
         }
         else if("create".equals(pageType)){
-            req.setAttribute("submitType",pageType+"Submit");
-            //.收集并封装参数
-            req.getRequestDispatcher("/view/subsidy/create.jsp").forward(req,resp);
-        }
-        else if("createSubmit".equals(pageType)){
-            /*收集数据直接插*/
-            /*但需要验证哦*/
+            Subsidy subsidy = pkg(req);
+            subsidy.setType(type);
+
+            System.out.println();
+            subsidyService.insert(subsidy);
+
+            resp.sendRedirect(req.getContextPath()+"/subsidy.do?type="+type);
         }
         else if("update".equals(pageType)){
             String id = req.getParameter("id");
@@ -119,16 +129,17 @@ public class SubsidyController extends HttpServlet {
                 //.收集数据id并查询返回 和 回显
                 Subsidy subsidy = subsidyService.queryById(Integer.parseInt(id));
                 req.setAttribute("subsidy",subsidy);
-                req.setAttribute("submitType",pageType+"Submit");
-                req.setAttribute("id",id);
-                req.getRequestDispatcher("/view/subsidy/create.jsp").forward(req,resp);
+                req.setAttribute("pageType",pageType+"Submit");
+                /*id 和 type在 params 里*/
+                req.getRequestDispatcher("/view/subsidy/update.jsp").forward(req,resp);
             }
         }
         else if("updateSubmit".equals(pageType)){
-            String id = req.getParameter("id");
             Subsidy subsidy = pkg(req);
-            /*去写修改表的sql语句 记得要修改两个表哦 person标的name card reason 还有subsidy表的money*/
-            /*然后重定向到展示页面就可以了*/
+            subsidy.setType(type);
+
+            subsidyService.update(subsidy);
+            resp.sendRedirect(req.getContextPath()+"/subsidy.do?type="+type);
         }
         else if("delete".equals(pageType)){
             String idParam = req.getParameter("id");
@@ -145,9 +156,8 @@ public class SubsidyController extends HttpServlet {
             if(ids.length < 1)
                 throw new NullPointerException("话说一条没选的话能进到这儿么！");
 
-            params.put("type",type);
             //.剩下的交给逻辑层
-            subsidyService.batch(ids,params);
+            subsidyService.batch(ids,Map.of("type",type));
 
             resp.sendRedirect(req.getContextPath()+"/subsidy.do?type="+typeParam);//到这了 数据层还没写呢
         }
@@ -173,20 +183,28 @@ public class SubsidyController extends HttpServlet {
 
     }
 
+    /*数据验证什么的可以写在这里*/
     private Subsidy pkg(HttpServletRequest req){
         Subsidy subsidy = new Subsidy();
-        subsidy.setPerson(new Person());
+
+        String id = req.getParameter("id");
+        if(null != id && Validator.isNotEmpty(id))
+            subsidy.setId(Integer.parseInt(id));
 
         String money = req.getParameter("money");
-        Pattern pattern = Pattern.compile("\\d+[.]?\\d+");
-        Matcher matcher = pattern.matcher(money);
-        if(matcher.find())
-            subsidy.setMoney(new BigDecimal(matcher.group()));
+        if(null != money && Validator.isNotEmpty(money) && Validator.isInteger(money))
+            subsidy.setMoney(new BigDecimal(money));
 
-        subsidy.getPerson().setCard(req.getParameter("card"));
-        subsidy.getPerson().setName(req.getParameter("name"));
-        subsidy.getPerson().setReason(req.getParameter("reason"));
+        String personID = req.getParameter("personID");
+        if(null != money && Validator.isNotEmpty(personID) && Validator.isInteger(personID))
+            subsidy.setPersonID(Integer.parseInt(personID));
 
+        Person person = new Person();
+        person.setName(req.getParameter("name"));
+        person.setCard(req.getParameter("card"));
+        person.setReason(req.getParameter("reason"));
+
+        subsidy.setPerson(person);
         return subsidy;
     }
 

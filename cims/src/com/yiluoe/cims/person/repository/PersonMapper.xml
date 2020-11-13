@@ -33,6 +33,10 @@
             <if test="null != ssd and null != sed">
                 and start between #{ssd} and #{sed}
             </if>
+
+            <if test="null != sig and '' != sign or 0 == sign or 1 == sign">
+                and sign = #{sign,jdbcType=INTEGER}
+            </if>
         </where>
             limit #{offset},#{pageSize}
     </select>
@@ -55,11 +59,16 @@
                 <if test="null != property">
                     and property=#{property}
                 </if>
-                <if test="null != ssd and null != sed">
+                <if test="null != ssd and '' != sed">
                     and start between #{ssd} and #{sed}
+                </if>
+
+                <if test="null != sig and '' != sign or 0 == sign or 1 == sign">
+                    and sign = #{sign,jdbcType=INTEGER}
                 </if>
             </where>
     </select>
+    <!--mybatis对0的处理有点特殊-->
     
     <select id="queryById" parameterType="int" resultType="Person">
         select id,name,card,state,grade,start,heating,property,reason from cims_person
@@ -72,8 +81,9 @@
         where id=#{id}
     </select>
 
+    <!--/*delete from cims_person where id=#{id}*/-->
     <select id="delete" parameterType="int">
-        delete from cims_person where id=#{id}
+        update cims_person set sign = 0 where id = #{id}
     </select>
 
     <!--不能再select表里写注释-->
@@ -84,6 +94,19 @@
             <foreach collection="array" item="id" open="(" separator="," close=")">
                 #{id}
             </foreach>
+    </select>
+
+
+    <!--查询人员的补贴信息-->
+    <resultMap id="subsidyInfoMap" type="Map">
+        <result property="count" column="count"/>
+        <result property="sum" column="sum"/>
+    </resultMap>
+
+    <select id="findSubsidy" parameterType="int" resultMap="subsidyInfoMap">
+        select count(1) count,sum(money) sum
+        from cims_subsidy
+        where person_id = #{personidabababababa}
     </select>
 
 </mapper>

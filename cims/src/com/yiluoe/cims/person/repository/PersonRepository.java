@@ -61,5 +61,5 @@ public interface PersonRepository {
      * @return 符合条件的总条数
      */
     public abstract long queryByCount(Map<String,Object> params);
-
+    public abstract Map<String,Object> findSubsidy(int id);
 }

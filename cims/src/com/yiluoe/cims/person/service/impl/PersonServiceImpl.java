@@ -60,4 +60,9 @@ public class PersonServiceImpl implements PersonService {
     public long queryByCount(Map<String, Object> params) {
         return personRepository.queryByCount(params);
     }
+
+    @Override
+    public Map<String, Object> findSubsidy(int id) {
+        return personRepository.findSubsidy(id);
+    }
 }

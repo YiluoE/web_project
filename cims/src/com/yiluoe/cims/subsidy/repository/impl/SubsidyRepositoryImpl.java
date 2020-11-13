@@ -15,9 +15,13 @@ import java.util.Map;
  * @create: 2020/11/9 15:42
  **/
 public class SubsidyRepositoryImpl implements SubsidyRepository {
+
     @Override
     public int insert(Subsidy entity) {
-        return 0;
+        SqlSession sqlSession = MybatisUtils.openSqlSession();
+        int row = sqlSession.insert("subsidy.insert",entity);
+        sqlSession.close();
+        return row;
     }
 
     @Override
@@ -30,7 +34,10 @@ public class SubsidyRepositoryImpl implements SubsidyRepository {
 
     @Override
     public int batch(int[] ids, Map<String, Object> params) {
-        return 0;
+        SqlSession sqlSession = MybatisUtils.openSqlSession();
+        int row = sqlSession.delete("subsidy.batch",Map.of("ids",ids,"type",params.get("type")));
+        sqlSession.close();
+        return row;
     }
 
     @Override
@@ -43,7 +50,10 @@ public class SubsidyRepositoryImpl implements SubsidyRepository {
 
     @Override
     public int update(Subsidy entity) {
-        return 0;
+        SqlSession sqlSession = MybatisUtils.openSqlSession();
+        int row = sqlSession.update("subsidy.update",entity);
+        sqlSession.close();
+        return row;
     }
 
     @Override
