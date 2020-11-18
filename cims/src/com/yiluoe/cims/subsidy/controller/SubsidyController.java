@@ -1,5 +1,6 @@
 package com.yiluoe.cims.subsidy.controller;
 
+import com.google.gson.Gson;
 import com.yiluoe.cims.person.entity.Person;
 import com.yiluoe.cims.subsidy.entity.Subsidy;
 import com.yiluoe.cims.subsidy.factory.SubsidyFactory;
@@ -16,6 +17,7 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +38,8 @@ import java.util.regex.Pattern;
 public class SubsidyController extends HttpServlet {
 
     private static SubsidyService subsidyService = SubsidyFactory.getService(); /*注入逻辑层接口*/
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+    private Gson gson = new Gson();
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -164,7 +167,7 @@ public class SubsidyController extends HttpServlet {
         else if("subsidyPerson".equals(pageType)){
             List<Map<String,Object>> list = subsidyService.querySubsidyPerson(type);
 
-            StringBuilder stringBuilder = new StringBuilder("[");
+            /*StringBuilder stringBuilder = new StringBuilder("[");
             for (int i = 0; i < list.size(); i++) {
                 Map<String,Object> o = list.get(i);
 
@@ -172,11 +175,13 @@ public class SubsidyController extends HttpServlet {
                 if(i < list.size() -1)
                     stringBuilder.append(",");
             }
-            stringBuilder.append("]");
+            stringBuilder.append("]");*/
+
+            String json = gson.toJson(list);
 
             resp.setContentType("application/json;charset=utf8");
             PrintWriter writer = resp.getWriter();
-            writer.write(stringBuilder.toString());
+            writer.write(json);
             writer.flush();
             writer.close();
         }

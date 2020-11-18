@@ -73,7 +73,12 @@
 										<td>
 											<f:formatDate value="${e.month}" pattern="yyyy年MM月"/>
 										</td>
-										<td>${e.person.name}</td>
+										<td>
+											${e.person.name}
+											<c:if test="${e.sign == 0}">
+												<font color="red">(已归档)</font>
+											</c:if>
+										</td>
 										<td>${e.person.card}</td>
 										<td>
 											<c:forEach items="${applicationScope.grade}" var="grade">

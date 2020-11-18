@@ -9,6 +9,7 @@
         <result property="month" column="month"/>
         <result property="money" column="money"/>
         <result property="type" column="type"/>
+        <result property="sign" column="sign"/>
         <!--property="person"父级属性--> <!--javaType="person"别名-->
         <association property="person" javaType="person">
             <id property="id" column="personID"/>
@@ -37,7 +38,7 @@
     </select>
 
     <select id="queryByPage" resultMap="subsidyMap" parameterType="Map">
-        select s.id as subsidyID,s.month,s.money,s.type,p.id as personID,p.name,p.card,p.grade
+        select s.id as subsidyID,s.month,s.money,s.type,p.id as personID,p.name,p.card,p.grade,p.sign
         from cims_subsidy s left join cims_person p on s.person_id = p.id
         <where>
             type=#{type}

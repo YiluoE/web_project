@@ -208,8 +208,13 @@
                       <ul class="sub">
                           <li><a class="" href="${pageContext.request.contextPath}/subsidy.do?type=1" target="mainFrame">供暖补贴</a></li>
                           <li><a class="" href="${pageContext.request.contextPath}/subsidy.do?type=2" target="mainFrame">物业补贴</a></li>
-                          <li><a class="" href="${pageContext.request.contextPath}/pigeonhole.do" target="mainFrame">归档</a></li>
                       </ul>
+                  </li>
+                  <li>
+                      <a class="" href="${pageContext.request.contextPath}/pigeonhole.do"  target="mainFrame">
+                          <i class="icon-file-alt"></i>
+                          <span>人员归档</span>
+                      </a>
                   </li>
               </ul>
               <!-- sidebar menu end-->

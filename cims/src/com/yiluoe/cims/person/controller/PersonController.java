@@ -1,11 +1,9 @@
 package com.yiluoe.cims.person.controller;
 
+import com.google.gson.Gson;
 import com.yiluoe.cims.person.entity.Person;
 import com.yiluoe.cims.person.factory.PersonFactory;
-import com.yiluoe.cims.person.repository.PersonRepository;
-import com.yiluoe.cims.person.repository.impl.PersonRepositoryImpl;
 import com.yiluoe.cims.person.service.PersonService;
-import com.yiluoe.cims.subsidy.repository.SubsidyRepository;
 import com.yiluoe.cims.util.validate.Validator;
 
 import javax.servlet.ServletException;
@@ -37,6 +35,7 @@ public class PersonController extends HttpServlet {
 
     private PersonService personService = PersonFactory.getService();
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private Gson gson = new Gson();
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -188,9 +187,13 @@ public class PersonController extends HttpServlet {
                 Map<String,Object> p = Map.of("card",card);
                 long count = personService.queryByCount(p);
 
+                /*3.转为洁身字符串，且设置响应类型为洁身*/
+                resp.setContentType("application/json");
+                String json = gson.toJson(Map.of("success",count == 0));
+
                 //3.返回响应
                 PrintWriter writer = resp.getWriter();
-                writer.write(count+"");
+                writer.write(json);
                 writer.flush();
                 writer.close();
             }
@@ -227,28 +230,26 @@ public class PersonController extends HttpServlet {
             /*查询日期区间*/
             String ssd = req.getParameter("sdate");
             String sed = req.getParameter("edate");
+            params.put("ssd",ssd);
+            params.put("sed",sed);
 
-            if(Validator.isDate(ssd) && Validator.isDate(sed)){
-                //LocalDate slocalDate = LocalDate.parse(sdate,DateTimeFormatter.ISO_DATE);
-
-                try {
+            try {
+                if(Validator.isDate(ssd)){
                     Date sdate = simpleDateFormat.parse(ssd);
+                    params.put("sdate",sdate);
+                }
+                if(Validator.isDate(sed)){
                     Date edate = simpleDateFormat.parse(sed);
-
-                    long ms = edate.getTime() - sdate.getTime();
-                    /*如果s大于e则不查询，或者你自己去完善...*/
-                    if(ms >= 0){
-                        params.put("ssd",ssd);
-                        params.put("sed",sed);
-                        params.put("sdate",sdate);
-                        params.put("edate",edate);
-                    }
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                    params.put("edate",edate);
                 }
 
+                //LocalDate slocalDate = LocalDate.parse(sdate,DateTimeFormatter.ISO_DATE);
+                /*开始日期和不能大于结束日期就不加了吧还没单条件查询好用*/
+                //long ms = edate.getTime() - sdate.getTime();
+                //if(ms < 0) ...;
+
             }
+            catch (ParseException e){ e.printStackTrace(); }
 
             /*补贴查询*/
             String heating = req.getParameter("heating");

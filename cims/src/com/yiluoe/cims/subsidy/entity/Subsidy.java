@@ -23,6 +23,8 @@ public class Subsidy {
     private int type;
     //外键
     private int personID;
+    //归档状态
+    private int sign;
 
     private Person person;
 
@@ -34,7 +36,16 @@ public class Subsidy {
                 ", money=" + money +
                 ", type=" + type +
                 ", person=" + person +
+                ", sign=" + sign +
                 '}';
+    }
+
+    public int getSign() {
+        return sign;
+    }
+
+    public void setSign(int sign) {
+        this.sign = sign;
     }
 
     public int getPersonID() {

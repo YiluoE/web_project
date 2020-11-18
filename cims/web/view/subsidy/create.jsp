@@ -56,9 +56,9 @@
                   </div>
               </form>
           </div>
-          </div>
-          </div>
       </section>
+    </div>
+    </div>
   </section>
 
     <script src="${pageContext.request.contextPath}/static/js/jquery.js"></script>
@@ -68,10 +68,95 @@
     <script type="text/javascript">
       $(document).ready(function() 
       {
+
+          $('#name').click(function () {
+
+              /*ajax*/
+              $.ajax({
+                  url: '${pageContext.request.contextPath}/subsidy.do?pageType=subsidyPerson&type=${param.type}',
+                  type: 'get',
+                  async: 'false',
+                  dataType: 'json',
+                  success: function (content) {
+                      if(content.length < 1){
+                          layer.alert('本月所有人员已补贴。！',{
+                              skin: 'layui-layer-molv',
+                              closeBtn: 0,
+                              anim: 4
+                          });
+
+                          return;
+                      }
+                      else {
+                          let html = '';
+                          html+='    <table class="table table-striped table-advance table-hover">';
+                          html+='        <thead>';
+                          html+='            <tr>';
+                          html+='                <th></th>';
+                          html+='                <th><i class="icon-bullhorn"></i>序号</th>';
+                          html+='                <th><i class="icon-male"></i>姓名</th>';
+                          html+='                <th><i class="icon-bookmark"></i>身份证号</th>';
+                          //html+='                <th><i class="icon-edit"></i>状态</th>';
+                          html+='            </tr>';
+                          html+='        </thead>';
+
+                          html+='        <tbody>';
+                          $.each(content,function (i,o) {
+                              html+='        <tr>';
+                              html+='            <td><input type="radio" name="personIDS" value="'+i+'"></td>'; /*太能了*/
+                              html+='            <td>'+(i+1)+'</td>';
+                              html+='            <td>'+o.name+'</td>';
+                              html+='            <td>'+o.card+'</td>';
+                              //html+'            <td>'+o.state+'</td>';
+                              html+='        </tr>';
+                          });
+                          html+='        </tbody>';
+
+                          html+='        <tfoot>';
+                          html+='            <tr>';
+                          html+='                <td colspan="4" style="text-align: center;"><button type="button" id="choose" class="btn btn-info"> 确定 </button></td>';
+                          html+='            </tr>';
+                          html+='        </tfoot>';
+                          html+='    </table>';
+
+                          let index = layer.open({
+                              type: 1,
+                              skin: 'layui-layer-molv',
+                              area: ['600px','500px'],
+                              content: html
+                          });
+
+                          $('#choose').click(function () {
+                              let radioArray = $('[name=personIDS]:checked'); /*获得选中的单选框，它的值是洁身下标*/
+                              if ($(radioArray).length === 0) {
+                                  layer.alert('请选择补贴人员！', {
+                                      skin: 'layui-layer-molv',
+                                      closeBtn: 0,
+                                      anim: 4
+                                  });
+
+                                  return;
+                              }
+
+                              let person = content[$(radioArray).first().val()];
+                              $('#personID').val(person.id);
+                              $('#name').val(person.name);
+                              $('#card').val(person.card);
+
+                              layer.close(index);
+                          });
+
+                      }
+                  }
+              });
+
+          });
+
+
           /*如果是修改页面禁用动态数据选择*/
           /*为人员选择绑定点击事件*/
           /*一整套的动态数据选择*/
-            $('#name').click(function () {
+          $('#yiluoe').click(function () {
                 //1.查询需要补贴的人员
                 /**
                  * 1. 创建ajax引擎对象

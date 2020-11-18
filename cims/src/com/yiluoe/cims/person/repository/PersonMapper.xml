@@ -30,7 +30,13 @@
             <if test="null != property">
                 and property=#{property}
             </if>
-            <if test="null != ssd and null != sed">
+            <if test="(null != ssd and '' != ssd) and (null == sed or '' == sed)">
+                and start <![CDATA[ >= ]]> #{ssd}
+            </if>
+            <if test="(null != sed and '' != sed) and (null == ssd or '' == ssd)">
+                and start <![CDATA[ <= ]]> #{sed}
+            </if>
+            <if test="null != ssd and '' != ssd and null != sed and '' != sed">
                 and start between #{ssd} and #{sed}
             </if>
 
@@ -59,7 +65,8 @@
                 <if test="null != property">
                     and property=#{property}
                 </if>
-                <if test="null != ssd and '' != sed">
+
+                <if test="null != ssd and '' != ssd and null != sed and '' != sed">
                     and start between #{ssd} and #{sed}
                 </if>
 
