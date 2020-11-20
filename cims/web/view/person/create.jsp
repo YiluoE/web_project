@@ -19,7 +19,7 @@
     <div class="col-lg-12">
       <section class="panel">
           <header class="panel-heading">
-             人员添加${pageContext}
+             人员添加
           </header>
           <div class="panel-body">
               <form class="form-horizontal tasi-form" id="createForm" action="${pageContext.request.contextPath}/person.do" method="post" <%--enctype="application/x-www-form-urlencoded"--%>>

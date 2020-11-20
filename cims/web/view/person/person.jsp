@@ -131,7 +131,7 @@
 									  <td>
 										  <a class="btn btn-primary btn-xs" href="${pageContext.request.contextPath}/person.do?id=${entity.id}&formType=load"><i class="icon-pencil"></i></a>
 										  <button type="button" name="delete" value="${entity.id}" class="btn btn-danger btn-xs"><i class="icon-trash "></i></button>
-									  </td>·
+									  </td>
 								  </tr>
 							  </c:forEach>
 						  </tbody>

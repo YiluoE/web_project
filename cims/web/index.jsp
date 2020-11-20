@@ -188,7 +188,7 @@
               <!-- sidebar menu start-->
               <ul class="sidebar-menu">
                   <li class="active">
-                      <a class="" href="main.html" target="mainFrame">
+                      <a class="" href="${pageContext.request.contextPath}/main.jsp" target="mainFrame">
                           <i class="icon-dashboard"></i>
                           <span>主页</span>
                       </a>
@@ -216,6 +216,12 @@
                           <span>人员归档</span>
                       </a>
                   </li>
+                  <li>
+                      <a class="" href="${pageContext.request.contextPath}/yiluoe/yiluoe.jsp"  target="mainFrame">
+                          <i class="icon-android"></i>
+                          <span>yiluoe</span>
+                      </a>
+                  </li>
               </ul>
               <!-- sidebar menu end-->
           </div>
@@ -226,7 +232,7 @@
           <section class="wrapper">
 			
 			<iframe class="mainFrame" name="mainFrame"
-                    src="main.html" frameborder="0" seamless></iframe>
+                    src="${pageContext.request.contextPath}/main.jsp" frameborder="0" seamless></iframe>
 	
           </section>
       </section>

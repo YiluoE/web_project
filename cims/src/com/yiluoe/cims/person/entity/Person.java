@@ -8,7 +8,7 @@ import java.util.Date;
  * @user: 本以罗伊斯
  * @create: 2020/11/6 14:41
  **/
-public class Person {
+public class Person implements java.io.Serializable{
 
     private int id;
     private String name;

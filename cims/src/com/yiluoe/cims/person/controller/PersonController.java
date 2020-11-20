@@ -202,22 +202,8 @@ public class PersonController extends HttpServlet {
         else {
             //req.setAttribute("personList",personService.queryAll());
 
-            int thisPage = 1;
-            String thisPageParam = req.getParameter("thisPage");
-
-            if(Validator.isInteger(thisPageParam))
-                thisPage = Integer.parseInt(thisPageParam);
-
-            /*最大页*/
-            int pageSize = 10;
-
-            /*从多少开始查询*/
-            int offset = (thisPage-1)*pageSize;
-
             /*封装动态查询参数*/
             Map<String,Object> params = new HashMap<>();
-            params.put("offset",offset);
-            params.put("pageSize",pageSize);
             params.put("name",req.getParameter("name"));
             params.put("card",req.getParameter("card"));
             params.put("sign",1); /*查询所有未归档人员*/
@@ -267,9 +253,27 @@ public class PersonController extends HttpServlet {
                 else
                     params.put("property",0);
             }
+            /*-----------------------分页查-----------------------*/
+            int thisPage = 1;
+            String thisPageParam = req.getParameter("thisPage");
+            if(Validator.isInteger(thisPageParam))
+                thisPage = Integer.parseInt(thisPageParam);
 
+            int pageSize = 10;
             long count = personService.queryByCount(params);
             int maxPage = (int)Math.ceil(count*1.0/pageSize);
+
+            /*分页查*/ /*从多少开始查询*/
+            /*如果总结果条数的页数大于等于当前页则按当前页查询 否则从0查*/
+            int offset = 0;
+            if( maxPage >= thisPage )
+                offset = (thisPage-1)*pageSize;
+            else
+                thisPage = 1;
+
+
+            params.put("offset",offset);
+            params.put("pageSize",pageSize);
 
             req.setAttribute("params",params);
             req.setAttribute("thisPage",thisPage);

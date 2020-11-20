@@ -1,3 +1,4 @@
+<%@page contentType="text/html;charset=utf-8" language="java"%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,13 +9,13 @@
 
     <title>干部收入管理系统-主页</title>
 
-    <link href="static/css/bootstrap.min.css" rel="stylesheet">
-    <link href="static/css/bootstrap-reset.css" rel="stylesheet">
-    <link href="static/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-    <link href="static/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
-    <link href="static/css/owl.carousel.css" rel="stylesheet" type="text/css">
-    <link href="static/css/style.css" rel="stylesheet">
-    <link href="static/css/style-responsive.css" rel="stylesheet" />
+    <link href="<%=request.getContextPath()%>/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath()%>/static/css/bootstrap-reset.css" rel="stylesheet">
+    <link href="<%=request.getContextPath()%>/static/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="<%=request.getContextPath()%>/static/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="<%=request.getContextPath()%>/static/css/owl.carousel.css" rel="stylesheet" type="text/css">
+    <link href="<%=request.getContextPath()%>/static/css/style.css" rel="stylesheet">
+    <link href="<%=request.getContextPath()%>/static/css/style-responsive.css" rel="stylesheet" />
   </head>
 
   <body>
@@ -33,8 +34,9 @@
                               <i class="icon-user"></i>
                           </div>
                           <div class="value">
-                              <h1>22</h1>
+                              <h1 id="user">0</h1>
                               <p>当月新用户</p>
+
                           </div>
                       </section>
                   </div>
@@ -44,7 +46,7 @@
                               <i class="icon-tags"></i>
                           </div>
                           <div class="value">
-                              <h1>14,281</h1>
+                              <h1 id="heating">0</h1>
                               <p>本周供暖补贴</p>
                           </div>
                       </section>
@@ -55,8 +57,8 @@
                               <i class="icon-shopping-cart"></i>
                           </div>
                           <div class="value">
-                              <h1>34,523</h1>
-                              <p>本周供暖补贴</p>
+                              <h1 id="property">0</h1>
+                              <p>本周物业补贴</p>
                           </div>
                       </section>
                   </div>
@@ -66,7 +68,7 @@
                               <i class="icon-bar-chart"></i>
                           </div>
                           <div class="value">
-                              <h1>48,804</h1>
+                              <h1 id="total">0</h1>
                               <p>本总补贴金额</p>
                           </div>
                       </section>
@@ -114,42 +116,21 @@
       <!--main content end-->
   </section>
 
-    <script src="static/js/jquery.js"></script>
-    <script src="static/js/jquery-1.8.3.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
-    <script src="static/js/jquery.scrollTo.min.js"></script>
-    <script src="static/js/jquery.nicescroll.js" type="text/javascript"></script>
-    <script src="static/js/jquery.sparkline.js" type="text/javascript"></script>
-    <script src="static/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
-    <script src="static/js/owl.carousel.js" ></script>
-    <script src="static/js/jquery.customSelect.min.js" ></script>
-    <script src="static/js/common-scripts.js"></script>
-    
-    <script src="static/js/easy-pie-chart.js"></script>
+    <script src="<%=request.getContextPath()%>/static/js/jquery.js"></script>
+    <script src="<%=request.getContextPath()%>/static/js/bootstrap.min.js"></script>
+    <%--<script src="<%=request.getContextPath()%>/static/js/common-scripts.js"></script>--%>
+    <script src="<%=request.getContextPath()%>/static/js/echarts.min.js"/>
     <script type="text/javascript">
+        
         $(document).ready(function() {
+            function init() {
+                $.get('url',function () {
 
-            $(".sparkline").each(function(){
-              var $data = $(this).data();
+                },'json');
 
-              $data.valueSpots = {'0:': $data.spotColor};
+            }
 
-              $(this).sparkline( $data.data || "html", $data,
-              {
-                  tooltipFormat: '<span style="display:block; padding:0px 10px 12px 0px;">' +
-                  '<span style="color: {{color}}">&#9679;</span> {{offset:names}} ({{percent.1}}%)</span>'
-              });
-          });
-
-           $("#barchart").sparkline([50,32,61,74,215,126,314,122,213,14,62,81,29,103,81,16,54,71,26,5,42,17,14], {
-                type: 'bar',
-                height: '90',
-                barWidth: 8,
-                barSpacing: 5,
-                barColor: '#fff',
-                tooltipFormat: '<span style="display:block; padding:0px 10px 12px 0px;">' +
-                   '<span style="color: {{color}}">&#9679;</span> {{offset:names}} ({{percent.1}}%)</span>'
-            });  
+            setInterval(init,60000);
         });
 
     </script>

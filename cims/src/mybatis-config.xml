@@ -8,7 +8,10 @@
 
     <!--可选变编程配置-->
     <settings>
-        <setting value="STDOUT_LOGGING" name="logImpl"/>
+        <!--全局映射器启用缓存-->
+        <setting name="cacheEnabled" value="true"/>
+        <!--日志输出-->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
     </settings>
 
     <!--为自定义对象提供别名-->
