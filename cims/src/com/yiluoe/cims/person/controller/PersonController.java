@@ -198,6 +198,12 @@ public class PersonController extends HttpServlet {
                 writer.close();
             }
         }
+        /*报表*/
+        else if(Validator.isNotEmpty(formType) && "chart".equals(formType)){
+            long count = personService.queryByLetterOfAdmin();
+            req.setAttribute("month",count);
+            req.getRequestDispatcher( "/main.jsp").forward(req,resp);
+        }
         /*查询操作*/
         else {
             //req.setAttribute("personList",personService.queryAll());

@@ -62,4 +62,6 @@ public interface PersonRepository {
      */
     public abstract long queryByCount(Map<String,Object> params);
     public abstract Map<String,Object> findSubsidy(int id);
+
+    public abstract long queryByLetterOfAdmin();
 }

@@ -100,7 +100,7 @@
                                     <span>前一月补贴</span>
                                     <strong>30 天 | 99%</strong>
                                 </div>
-                                <div id="barchart"></div>
+                                <div id="main" style="width: 100%; height: 300px;"></div>
                             </div>
                         </div>
                         <div class="chart-tittle">
@@ -116,23 +116,49 @@
       <!--main content end-->
   </section>
 
-    <script src="<%=request.getContextPath()%>/static/js/jquery.js"></script>
-    <script src="<%=request.getContextPath()%>/static/js/bootstrap.min.js"></script>
-    <%--<script src="<%=request.getContextPath()%>/static/js/common-scripts.js"></script>--%>
-    <script src="<%=request.getContextPath()%>/static/js/echarts.min.js"/>
+    <script src="${pageContext.request.contextPath}/static/js/jquery.js"></script>
+    <script src="${pageContext.request.contextPath}/static/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/static/js/echarts/echarts.min.js"></script>
+
     <script type="text/javascript">
-        
         $(document).ready(function() {
-            function init() {
+
+            /*报表初始化 将报表放到main里*/
+            let mainCharts = echarts.init(document.getElementById('main'));
+
+            let option = {
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value',
+                    min: 500,
+                    max: 2000
+                },
+                series: [{
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    type: 'bar'
+                }]
+            };
+
+
+            mainCharts.setOption(option);
+
+            /*本月新用户*/
+            $('#user').text(${month});
+
+            /*function init() {
                 $.get('url',function () {
 
+
+
                 },'json');
-
             }
+            setInterval(init,60000);*/
 
-            setInterval(init,60000);
         });
-
     </script>
+
   </body>
 </html>

@@ -62,4 +62,10 @@ public interface PersonService {
      */
     public abstract long queryByCount(Map<String,Object> params);
     public abstract Map<String,Object> findSubsidy(int id);
+
+    /**
+     *
+     * @return 当月新用户
+     */
+    public abstract long queryByLetterOfAdmin();
 }

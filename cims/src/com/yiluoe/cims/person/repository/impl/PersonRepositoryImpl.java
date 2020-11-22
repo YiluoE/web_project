@@ -98,4 +98,12 @@ public class PersonRepositoryImpl implements PersonRepository {
         sqlSession.close();
         return resultMap;
     }
+
+    @Override
+    public long queryByLetterOfAdmin() {
+        SqlSession sqlSession = MybatisUtils.getSqlSession();
+        long count = sqlSession.selectOne("person.letterOfAdmin");
+        sqlSession.close();
+        return count;
+    }
 }

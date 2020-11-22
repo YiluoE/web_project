@@ -5,6 +5,12 @@
 
     <cache type="com.yiluoe.cims.util.cache.MyBatisCache"/>
 
+    <!-- 报表 -->
+    <select id="letterOfAdmin" resultType="long">
+        select count(1) from cims_person where month(start) = month(now())
+    </select>
+    <!-- Eed -->
+
     <insert id="insert" parameterType="Person">
         insert into cims_person(name,card,state,grade,start,heating,property,reason)
         values(#{name},#{card},#{state},#{grade},#{start},#{heating},#{property},#{reason})

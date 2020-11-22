@@ -188,7 +188,7 @@
               <!-- sidebar menu start-->
               <ul class="sidebar-menu">
                   <li class="active">
-                      <a class="" href="${pageContext.request.contextPath}/main.jsp" target="mainFrame">
+                      <a class="" href="${pageContext.request.contextPath}/person.do?formType=chart" target="mainFrame">
                           <i class="icon-dashboard"></i>
                           <span>主页</span>
                       </a>
@@ -232,7 +232,7 @@
           <section class="wrapper">
 			
 			<iframe class="mainFrame" name="mainFrame"
-                    src="${pageContext.request.contextPath}/main.jsp" frameborder="0" seamless></iframe>
+                    src="${pageContext.request.contextPath}/person.do?formType=chart" frameborder="0" seamless></iframe>
 	
           </section>
       </section>

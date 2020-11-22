@@ -65,4 +65,9 @@ public class PersonServiceImpl implements PersonService {
     public Map<String, Object> findSubsidy(int id) {
         return personRepository.findSubsidy(id);
     }
+
+    @Override
+    public long queryByLetterOfAdmin() {
+        return personRepository.queryByLetterOfAdmin();
+    }
 }
