@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.yiluoe</groupId>
+    <artifactId>amaven</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging> <!--总节点-->
+
+    <!--模块-->
+    <modules>
+        <module>commons-component</module>
+        <module>system-modules</module>
+    </modules>
+
+    <!--所有子模块及自己 强制依赖-->
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!--只负责声明和管理依赖，不强制要求子模块依赖-->
+    <dependencyManagement>
+        <dependencies>
+            <!--依赖子模块-->
+            <dependency>
+                <groupId>cn.yiluoe</groupId>
+                <artifactId>commons-validate</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.yiluoe</groupId>
+                <artifactId>commons-mybatis</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+
+</project>

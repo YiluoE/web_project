@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--这里的类在服务器启动时会全部被实例化为单例-->
+
+    <!--不能写接口和抽象类，因为它们不能实例化-->
+    <bean id="iocService" class="cn.yiluoe.spring.ioc.service.impl.IocServiceImpl" autowire="byType">
+        <!--全局注入--><!--优势可以交叉注入：补贴逻辑层注入补贴数据层，同时注入人员数据层-->
+            <!--构造器注入-->
+            <!--这种注入方法虽然先实例化自己，但依赖先实例化完成-->
+            <!--另一种说法与上面不冲突：优先实例化数据层 因为逻辑层依赖它-->
+            <!--<constructor-arg ref="iocRepository"/>-->
+
+            <!--setter注入-->
+            <!--<property name="icoRepository" ref="iocRepository"/>-->
+
+        <!--局部注入--><!--优势 负载小，单项注入更更清晰-->
+            <!--<constructor-arg>
+                <bean class="cn.yiluoe.spring.ioc.repository.impl.IocRepositoryImpl"></bean>
+            </constructor-arg>-->
+    </bean>
+
+    <bean id="iocRepository" class="cn.yiluoe.spring.ioc.repository.impl.IocRepositoryImpl"/>
+
+</beans>

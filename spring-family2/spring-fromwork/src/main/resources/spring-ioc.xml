@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--
+        xml两种定义形式
+        1. dtd spring-context.dtd
+        2. xsd spring-context.xsd
+    -->
+
+    <context:component-scan base-package="cn.yiluoe.spring.ioc" use-default-filters="true"/>
+
+    <!--<bean name="test" class="cn.yiluoe.spring.ioc.entity.Test">
+        <property name="property" value="asdsa"></property>
+    </bean>-->
+
+    <!--<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations" value="classpath:cn">
+        </property>
+    </bean>-->
+
+    <!--
+        被动扫描
+        context: 容器上下文（spring ioc）
+        component:scan 扫描组件
+            cn.yiluoe.spring.ioc.service.impl.IocServiceImpl. 组件是什么
+                前端工程师知道我不知道。
+                组件就是：bean
+            2. 去哪里扫描
+        base-package\
+            扫描的包路径
+
+        连起来就是：根据你提供的包路径去扫描你的class然后将它们作为bean组件，
+        再帮你装载到ioc。
+    -->
+
+
+<!--
+    <bean id="iocService" class="cn.yiluoe.spring.ioc.service.impl.IocServiceImpl" scope="prototype">
+        <constructor-arg ref="ioRepository"/>
+    </bean>
+
+    <bean id="ioRepository" class="cn.yiluoe.spring.ioc.repository.impl.IocRepositoryImpl"/>
+-->
+
+</beans>
