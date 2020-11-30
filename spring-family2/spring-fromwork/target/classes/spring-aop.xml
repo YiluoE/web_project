@@ -17,6 +17,12 @@
             <!--切入点-->
             <aop:pointcut id="methodPointcut" expression="execution(long cn.yiluoe.spring.*.service.impl.*.*(..))"/>
 
+            <!--带参切入点-->
+            <!--想获取连接点的参数？ 你可以像下面这样做 但代理方法必须要接噢！-->
+            <!--什么你想在.java的注解切入时使用and但没问题，却在.XML里切入使用&&却不行？-->
+            <!-- 你可以这样做：&amp;&amp; -->
+            <!--<aop:pointcut id="methodPointcut" expression="execution(long cn.yiluoe.spring.*.service.impl.*.*(..)) and args(name,args)"/>-->
+
             <!--切入-->
             <aop:after method="logger" pointcut-ref="methodPointcut"/>
         </aop:aspect>

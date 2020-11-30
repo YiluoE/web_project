@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--扫描(数据源主备切换)-->
+    <context:component-scan base-package="cn.yiluoe.spring"/>
+
+    <!--启用：AOP注解支持-->
+    <!--<aop:aspectj-autoproxy expose-proxy="false"/>-->
+
+    <!--读入数据库链接配置信息-->
+    <!--<context:component-scan base-package=""/>--> <!--为什么非要用你引包？-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!--建立数据库链接池管理类-->
+    <!--1.dbcp2-->
+    <!--<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" init-method="createDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="initialSize" value="${pool.initialSize}"/>
+        <property name="minIdle" value="${pool.minIdle}"/>
+        <property name="maxIdle" value="${pool.maxIdle}"/>
+    </bean>-->
+
+    <!--2.c3p0-->
+    <!--它会在初始化DataSource时自动创建数据库连接池-->
+    <!--<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>-->
+
+    <!--3.alibaba-druid-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    <bean id="dataSourceAli" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverAli}"/>
+        <property name="url" value="${jdbc.urlAli}"/>
+        <property name="username" value="${jdbc.usernameAli}"/>
+        <property name="password" value="${jdbc.passwordAli}"/>
+    </bean>
+
+    <!--4.hikari-->
+    <!--<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>-->
+
+
+    <!--模板：提供了与数据数据库交互的简单方法-->
+    <!--实现动态切换数据库服务器。-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <!--提供了构造器注入，和setter注入-->
+        <constructor-arg ref="dataSource"/><!--dataSourceSwitcher-->
+        <!--dataSourceSwitcher 为什么能选择它？因为DataSourceRepository实现了-->
+    </bean>
+</beans>

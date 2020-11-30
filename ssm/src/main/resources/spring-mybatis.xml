@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       https://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--  扫描表现层以外的实例  -->
+    <context:component-scan base-package="cn.yiluoe.ssm" use-default-filters="true">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+
+    <!--  读取jdbc.properties  -->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+
+    <!--
+    数据库连接池(数据源)
+        1.driverClassName：注入获取链接的必要信息(注入链接数据库四要素)
+        2.init-method：数据源类实例化完成后,创建数据库链接池(抓取链接至链接池)
+        3.destroy-method：数据源类销毁前,主动关闭链接池(归还链接至数据库)
+    -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+
+    <!--
+        mybatis 的 SqlSessionFactory
+            1.dataSource：注入数据源。
+            2.typeAliasesPackage：我悟了,你还记得以前为mybatis提供别名吗,如果不提供的话要加包名,
+                所以在这里批量指定别名了,别名就是类名。
+            3.mapperLocations：扫描mybatis的mapper映射文件。
+    -->
+    <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="typeAliasesPackage" value="cn.yiluoe.ssm.*.entity"/>
+        <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"/>
+    </bean>
+
+    <!--
+        mybatis与spring整合：
+            帮我们定位到数据层接口，根据接口生成一个代理的数据层实现类，向实现类里注入SqlSessionFactory。
+            1.basePackage：扫描数据层接口,为接口生成动态代理实例。
+            2.sqlSessionFactoryBeanName：把sqlSessionFactoryBean注入到代理实例中,
+                如果你的mybatis工厂类叫sqlSessionFactory是可以省略掉,但我的带Bean,而且我不太敢省,
+                因为我没翻到它默认指定的值。
+
+            //为什么创建一个数据层接口的代理类？(或者说为什么创建一个数据层实现类的代理类,虽然实现类不是我们写的,
+                但我们需要在逻辑层使用阿)
+    -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.yiluoe.ssm.*.repository"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean"/>
+    </bean>
+
+
+    <!--  事务管理器  -->
+    <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <constructor-arg name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--
+        Aop横切需要绑定事务的逻辑层方法
+    -->
+    <aop:config>
+        <aop:pointcut id="transactionMethod" expression="execution(* cn.yiluoe.ssm.*.service.impl.*.*(..))"/>
+        <!--  (事务的环绕通知,拦截前做点什么拦截后做点什么)为切入点拦截下来的方法绑定事务  -->
+        <aop:advisor advice-ref="transactionAdvice" pointcut-ref="transactionMethod"/>
+    </aop:config>
+
+    <!--
+        事务的通知(声明型事务配置)
+    -->
+    <tx:advice id="transactionAdvice" transaction-manager="dataSourceTransactionManager">
+        <tx:attributes>
+            <tx:method name="insert*"/>
+            <tx:method name="delete*"/>
+            <tx:method name="update*"/>
+            <tx:method name="query*" read-only="true"/>
+            <tx:method name="*" read-only="true"/> <!--其它任何方法,而不是所有方法-->
+        </tx:attributes>
+    </tx:advice>
+
+
+</beans>

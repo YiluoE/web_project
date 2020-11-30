@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId> <!--ioc core-->
+            <artifactId>spring-context</artifactId> <!--spring core(spring核心框架包括ioc)-->
             <version>${spring.version}</version>
         </dependency>
         <dependency>
@@ -25,7 +25,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-aspects</artifactId> <!--引入IOC-->
+            <artifactId>spring-aspects</artifactId> <!--引入AOP-->
             <version>${spring.version}</version>
         </dependency>
 
